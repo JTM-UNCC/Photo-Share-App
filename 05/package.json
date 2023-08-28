@@ -1,0 +1,61 @@
+{
+  "name": "project5",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Project #5 - Start ReactJS PhotoApp",
+  "main": "webServer.js",
+  "scripts": {
+    "build": "webpack --devtool eval-cheap-module-source-map --output-pathinfo",
+    "build:w": "webpack --devtool eval-cheap-module-source-map --output-pathinfo --watch",
+    "lint": "eslint *.jsx components/*/*.jsx || exit 0"
+  },
+  "author": "Mendel Rosenblum <mendel@cs.stanford.edu> ",
+  "contributors": [
+    "Todd Dobbs <dobbsbt@wofford.edu> (https://orcid.org/0000-0001-6711-6962)"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.11.8",
+    "@mui/styles": "^5.11.7",
+    "@mui/system": "^5.11.8",
+    "@popperjs/core": "^2.11.5",
+    "babel-plugin-lodash": "^3.3.4",
+    "express": "^4.18.1",
+    "file-loader": "^6.2.0",
+    "js-yaml": "^4.1.0",
+    "prismjs": "^1.26.0",
+    "promise": "^8.1.0",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-router": "^5.1.12",
+    "react-router-dom": "^5.1.12",
+    "url-loader": "^4.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.20.12",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-stage-2": "^7.8.3",
+    "@babel/runtime": "^7.17.9",
+    "babel-jest": "^27.4.6",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "ssri": "^9.0.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "y18n": "^5.0.8"
+  },
+  "overrides": {
+    "core-js": "3.22.3"
+  }
+}
