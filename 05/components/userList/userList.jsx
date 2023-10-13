@@ -15,6 +15,16 @@ import './userList.css';
 class UserList extends React.Component {
   constructor(props) {
     super(props);
+    this.user = {
+      list:window.models.userListModel()
+    }
+    this.handleClick = this.handleClick.bind(this);
+    console.log('window.models.userListModel', window.models.userListModel);
+  }
+
+  handleClick(event) {
+    alert('hello');
+    alert(this.user.list[0]._id)
   }
 
   render() {
@@ -27,15 +37,36 @@ class UserList extends React.Component {
         </Typography>
         <List component="nav">
           <ListItem>
-            <ListItemText primary="Item #1" />
+            <ListItemText
+                id="0"
+                primary={`${this.user.list[0].first_name} ${this.user.list[0].last_name}`}
+                onClick = {(event) => this.handleClick(event)}
+            />
           </ListItem>
           <Divider />
+
           <ListItem>
-            <ListItemText primary="Item #2" />
+            <ListItemText primary={`${this.user.list[1].first_name} ${this.user.list[1].last_name}`} />
           </ListItem>
           <Divider />
+
           <ListItem>
-            <ListItemText primary="Item #3" />
+            <ListItemText primary={`${this.user.list[2].first_name} ${this.user.list[2].last_name}`} />
+          </ListItem>
+          <Divider />
+
+          <ListItem>
+            <ListItemText primary={`${this.user.list[3].first_name} ${this.user.list[3].last_name}`} />
+          </ListItem>
+          <Divider />
+
+          <ListItem>
+            <ListItemText primary={`${this.user.list[4].first_name} ${this.user.list[4].last_name}`} />
+          </ListItem>
+          <Divider />
+
+          <ListItem>
+            <ListItemText primary={`${this.user.list[5].first_name} ${this.user.list[5].last_name}`} />
           </ListItem>
           <Divider />
         </List>
