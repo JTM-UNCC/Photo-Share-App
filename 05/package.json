@@ -1,17 +1,17 @@
 {
-  "name": "project5",
+  "name": "project6",
   "version": "1.0.0",
   "private": true,
-  "description": "Project #5 - Start ReactJS PhotoApp",
+  "description": "Project 6: Appserver and Database (React)",
   "main": "webServer.js",
   "scripts": {
-    "build": "webpack --devtool eval-cheap-module-source-map --output-pathinfo",
-    "build:w": "webpack --devtool eval-cheap-module-source-map --output-pathinfo --watch",
-    "lint": "eslint *.jsx components/*/*.jsx || exit 0"
+    "build": "webpack --devtool eval-cheap-module-source-map",
+    "build:w": "webpack --devtool eval-cheap-module-source-map --watch",
+    "lint": "eslint webServer.js loadDatabase.js *.jsx components/*/*.jsx || exit 0"
   },
   "author": "Mendel Rosenblum <mendel@cs.stanford.edu> ",
   "contributors": [
-    "Todd Dobbs <dobbsbt@wofford.edu> (https://orcid.org/0000-0001-6711-6962)"
+    "Todd Dobbs <btdobbs@uncc.edu> (https://orcid.org/0000-0001-6711-6962)"
   ],
   "license": "ISC",
   "dependencies": {
@@ -31,7 +31,12 @@
     "react-dom": "^17.0.0",
     "react-router": "^5.1.12",
     "react-router-dom": "^5.1.12",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "mongoose": "^6.2.1",
+    "nodemon": "^2.0.16",
+    "bluebird": "^3.5.3",
+    "async": "^3.1.1",
+    "axios": "^0.21.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",
