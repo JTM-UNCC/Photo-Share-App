@@ -5,7 +5,6 @@ import {
     TextField
 } from '@mui/material';
 import './userDetail.css';
-import fetchModel from "../../lib/fetchModelData";
 import axios from 'axios';
 
 
