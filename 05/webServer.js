@@ -143,7 +143,7 @@ app.get("/test/:p1", function (request, response) {
  * URL /user/list - Returns all the User objects.
  */
 app.get("/user/list", function (request, response) {
-  User.find({}, "_id first_name last_name").then(function(err, info){
+  User.find({}, "_id first_name last_name", function(err, info){
     if(err){
       console.error("Error in user/list", err);
       response.status(500).send(JSON.stringify(err));
@@ -154,7 +154,7 @@ app.get("/user/list", function (request, response) {
       return;
     }
     console.log(info);
-    response.status(200).send(JSON.stringify(info));
+    response.end(JSON.stringify(info));
   });
 });
 
@@ -163,8 +163,7 @@ app.get("/user/list", function (request, response) {
  */
 app.get("/user/:id", function (request, response) {
   const id = request.params.id;
-  User.findOne({"_id": id}, "_id first_name last_name location description occupation")
-      .then(function(err, user){
+  User.findOne({"_id": id}, "_id first_name last_name location description occupation", function(err, user){
     if (err){
       console.error("error in user/:id", err);
       response.status(500).send(JSON.stringify(err));
@@ -175,7 +174,7 @@ app.get("/user/:id", function (request, response) {
       return;
     }
     response.status(200).send(JSON.stringify(user));
-  })
+  });
 
 
 });
