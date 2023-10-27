@@ -4,6 +4,7 @@ import {
 } from '@mui/material';
 import './TopBar.css';
 import fetchModel from "../../lib/fetchModelData";
+import axios from 'axios';
 
 /**
  * Define TopBar, a React componment of project #5
@@ -23,7 +24,8 @@ class TopBar extends React.Component {
     handleAppInfoChange(){
         const app_info = this.state.app_info;
         if (app_info === undefined){
-            fetchModel("/test/info")
+            axios.get("/test/info")
+           /* fetchModel("/test/info") */
                 .then((response) =>
                 {
                     this.setState({
