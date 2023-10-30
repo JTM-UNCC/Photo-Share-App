@@ -1,17 +1,13 @@
 /**
- * This Node.js program loads the Project 6 model data into Mongoose
+ * This Node.js program loads the Project 7 model data into Mongoose
  * defined objects in a MongoDB database. It can be run with the command:
  *     node loadDatabase.js
- * be sure to have an instance of the MongoDB running on the localhost.
+ * Be sure to have an instance of the MongoDB running on the localhost.
  *
  * This script loads the data into the MongoDB database named 'project6'.
  * In loads into collections named User and Photos. The Comments are added in
- * the Photos of the comments. Any previous objects in those collections is
+ * the Photos of the comments. Any previous objects in those collections are
  * discarded.
- *
- * NOTE: This scripts uses Promise abstraction for handling the async calls to
- * the database. We are not teaching Promises in CS so strongly suggest you
- * don't use them in your solution.
  */
 
 // We use the Mongoose to define the schema stored in MongoDB.
@@ -55,6 +51,8 @@ Promise.all(removePromises)
         location: user.location,
         description: user.description,
         occupation: user.occupation,
+        login_name: user.last_name.toLowerCase(),
+        password: "weak",
       })
         .then(function (userObj) {
           // Set the unique ID of the object. We use the MongoDB generated _id
