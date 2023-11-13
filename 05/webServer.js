@@ -34,6 +34,9 @@
 const mongoose = require("mongoose");
 mongoose.Promise = require("bluebird");
 
+
+
+const fs = require("fs");
 const async = require("async");
 
 const express = require("express");
@@ -46,6 +49,8 @@ const SchemaInfo = require("./schema/schemaInfo.js");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const processFormBody = multer({storage: multer.memoryStorage()}).single('uploadedphoto');
+
 
 app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
 app.use(bodyParser.json());
@@ -203,6 +208,51 @@ app.get("/user/:id", function (request, response) {
 
 
 });
+
+/**
+ * URL /photos/new - adds a new photo for the current user
+ */
+app.post("/photos/new", function (request, response) {
+  if (hasNoUserSession(request, response)) return;
+  const user_id = getSessionUserID(request) || "";
+  if (user_id === "") {
+    console.error("Error in /photos/new", user_id);
+    response.status(400).send("user_id required");
+    return;
+  }
+  processFormBody(request, response, function (err) {
+    if (err || !request.file) {
+      console.error("Error in /photos/new", err);
+      response.status(400).send("photo required");
+      return;
+    }
+    const timestamp = new Date().valueOf();
+    const filename = 'U' +  String(timestamp) + request.file.originalname;
+    fs.writeFile("./images/" + filename, request.file.buffer, function (err) {
+      if (err) {
+        console.error("Error in /photos/new", err);
+        response.status(400).send("error writing photo");
+        return;
+      }
+      Photo.create(
+          {
+            _id: new mongoose.Types.ObjectId(),
+            file_name: filename,
+            date_time: new Date(),
+            user_id: new mongoose.Types.ObjectId(user_id),
+            comment: []
+          })
+          .then((returnValue) => {
+            response.end();
+          })
+          .catch(err => {
+            console.error("Error in /photos/new", err);
+            response.status(500).send(JSON.stringify(err));
+          });
+    });
+  });
+});
+
 
 /**
  * URL /photosOfUser/:id - Returns the Photos for User (id).
