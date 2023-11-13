@@ -67,6 +67,25 @@ mongoose.connect("mongodb://127.0.0.1/project6", {
 // (http://expressjs.com/en/starter/static-files.html) do all the work for us.
 app.use(express.static(__dirname));
 
+
+function getSessionUserID(request){
+  return request.session.user_id;
+  //return session.user._id;
+}
+
+function hasNoUserSession(request, response){
+  //return false;
+  if (!getSessionUserID(request)){
+    response.status(401).send();
+    return true;
+  }
+  // if (session.user === undefined){
+  //   response.status(401).send();
+  //   return true;
+  // }
+  return false;
+}
+
 app.get("/", function (request, response) {
   response.send("Simple web server of files from " + __dirname);
 });
