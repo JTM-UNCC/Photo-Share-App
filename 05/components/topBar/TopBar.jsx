@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    AppBar, Button, Toolbar, Typography
+    AppBar, Button, Toolbar, Typography, Divider
 } from '@mui/material';
 import './TopBar.css';
 import axios from 'axios';
@@ -12,7 +12,10 @@ class TopBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            app_info: undefined
+            app_info: undefined,
+            photo_upload_show: false,
+            photo_upload_error: false,
+            photo_upload_success: false
         };
         this.logout = this.logout.bind(this);
         this.handleNewPhoto = this.handleNewPhoto.bind(this);
