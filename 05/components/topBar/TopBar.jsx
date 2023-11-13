@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    AppBar, Toolbar, Typography
+    AppBar, Button, Toolbar, Typography
 } from '@mui/material';
 import './TopBar.css';
 import axios from 'axios';
@@ -14,10 +14,20 @@ class TopBar extends React.Component {
         this.state = {
             app_info: undefined
         };
+        this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
         this.handleAppInfoChange();
+    }
+
+
+    logout = () =>{
+        axios.post("/admin/logout", { withCredentials: true }).then(() => {
+            this.props.changeUser(undefined);
+        }).catch(error => {
+            console.error(error);
+        });
     }
 
     handleAppInfoChange(){
@@ -41,6 +51,11 @@ class TopBar extends React.Component {
                     <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>ITSC 3155 Group 4</Typography>
                     <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} color="inherit">{this.props.main_content}</Typography>
                     <Typography variant="h5" component="div" color="inherit">Version: {this.state.app_info.__v}</Typography>
+                    {
+                        this.props.loggedIn() ?
+                        <Button variant="contained" onClick={this.logout}>Logout</Button> :
+                            <div/>
+                    }
                 </Toolbar>
             </AppBar>
         ) : (
