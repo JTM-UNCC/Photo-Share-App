@@ -82,26 +82,27 @@ class TopBar extends React.Component {
                     <Typography variant="h5" component="div" color="inherit">Version: {this.state.app_info.__v}</Typography>
                     {
                         this.props.loggedIn() ?
-                        <Button variant="contained" onClick={this.logout}>Logout</Button> :
-                            <div/>
-                    }
-                    {
-                        <Button
-                            component = "label"
-                            variant = "contained"
-                        >
-                            Add Photo
-                            <input
-                                type="file"
-                                accept = "image/*"
-                                hidden
-                                ref={(domFileRef) => { this.uploadInput = domFileRef; }}
-                                onChange={this.handleNewPhoto}
-                            />
-                        </Button>
+                            <Button variant="contained" onClick={this.logout}>Logout</Button> :
+                            <>
+                                <Divider orientation="vertical" flexItem/>
+                                <Button
+                                    component="label"
+                                    variant="contained"
+                                >
+                                    Add Photo
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        ref={(domFileRef) => { this.uploadInput = domFileRef; }}
+                                        onChange={this.handleNewPhoto}
+                                    />
+                                </Button>
+                            </>
                     }
                 </Toolbar>
             </AppBar>
+
         ) : (
             <div/>
         );
