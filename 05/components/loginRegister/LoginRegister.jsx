@@ -13,7 +13,7 @@ import {
     Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import './loginRegister.css';
+import './LoginRegister.css';
 import axios from 'axios';
 import {Stack} from "@mui/system";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

@@ -8,7 +8,6 @@ import {
 import './userList.css';
 import axios from 'axios';
 
-
 /**
  * Define UserList, a React component of project #5
  */
@@ -43,7 +42,6 @@ class UserList extends React.Component {
 
   handleUserListChange(){
     axios.get("/user/list")
-    /* fetchModel("/user/list") */
         .then((response) =>
         {
           this.setState({

@@ -1,23 +1,25 @@
 "use strict";
+/* jshint node: true */
 
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 
 /**
  * Define the Mongoose Schema for a Comment.
  */
-const userSchema = new mongoose.Schema({
-  login_name: String,
+var userSchema = new mongoose.Schema({
   first_name: String,
   last_name: String,
   location: String,
   description: String,
   occupation: String,
+  login_name: String,
+  password: String
 });
 
 /**
  * Create a Mongoose Model for a User using the userSchema.
  */
-const User = mongoose.model("User", userSchema);
+var User = mongoose.model("User", userSchema);
 
 /**
  * Make this available to our application.
