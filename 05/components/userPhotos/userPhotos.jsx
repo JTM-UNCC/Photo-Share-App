@@ -52,7 +52,58 @@ class UserPhotos extends React.Component {
           this.props.changeMainContent(main_content);
         });
   }
+  handleNewCommentChange = (event) => {
+        this.setState({
+            new_comment: event.target.value
+        });
+    }
 
+    handleShowAddComment = (event) => {
+        const photo_id = event.target.attributes.photo_id.value;
+        this.setState({
+            add_comment: true,
+            current_photo_id: photo_id
+        });
+    }
+
+    handleCancelAddComment = () => {
+        this.setState({
+            add_comment: false,
+            new_comment: undefined,
+            current_photo_id: undefined
+        });
+    }
+
+    handleSubmitAddComment = () => {
+        const currentState = JSON.stringify({comment: this.state.new_comment});
+        const photo_id = this.state.current_photo_id;
+        const user_id = this.state.user_id;
+        axios.post("/commentsOfPhoto/" + photo_id,
+            currentState,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then((response) =>
+            {
+                this.setState({
+                    add_comment : false,
+                    new_comment: undefined,
+                    current_photo_id: undefined
+                });
+                axios.get("/photosOfUser/" + user_id)
+                    .then((response) =>
+                    {
+                        this.setState({
+                            photos: response.data
+                        });
+                    });
+            })
+            .catch( error => {
+                console.log(error);
+            });
+    }
   render() {
     return this.state.user_id ? (
         <div>
@@ -89,13 +140,43 @@ class UserPhotos extends React.Component {
                       ))
                       : (
                           <div>
-                            <TextField id="comment" label="No Comments" variant="outlined" disabled fullWidth
-                                       margin="normal" />
-                          </div>
-                      )}
-                </div>
-            ))}
-          </ImageList>
+                                        <Typography>No Comments</Typography>
+                                    </div>
+                                )}
+                                <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
+                                    Write Comment
+                                </Button>
+                            </div>
+                        </div>
+                    )) : (
+                        <div>
+                            <Typography>No Photos</Typography>
+                        </div>
+                    )}
+                </ImageList>
+                <Dialog open={this.state.add_comment}>
+                    <DialogTitle>Write Comment</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Enter New Comment for Photo
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="comment"
+                            label="Comment"
+                            multiline rows={4}
+                            fullWidth
+                            variant="standard"
+                            onChange={this.handleNewCommentChange}
+                            defaultValue={this.state.new_comment}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => {this.handleCancelAddComment()}}>Cancel</Button>
+                        <Button onClick={() => {this.handleSubmitAddComment()}}>Add</Button>
+                    </DialogActions>
+                </Dialog>
         </div>
     ) : (
         <div/>
