@@ -105,46 +105,48 @@ class UserPhotos extends React.Component {
             });
     }
   render() {
-    return this.state.user_id ? (
-        <div>
-          <div>
-            <Button variant="contained" component="a" href={"#/users/" + this.state.user_id}>
-              User Detail
-            </Button>
-          </div>
-          <ImageList variant="masonry" cols={1} gap={8}>
-            {this.state.photos.map((item) => (
-                <div key={item._id}>
-                  <TextField id="date" label="Photo Date" variant="outlined" disabled fullWidth margin="normal"
-                             value={item.date_time} />
-                  <ImageListItem key={item.file_name}>
-                    <img
-                        src={`images/${item.file_name}`}
-                        srcSet={`images/${item.file_name}`}
-                        alt={item.file_name}
-                        loading="lazy"
-                    />
-                  </ImageListItem>
-                  {item.comments ?
-                      item.comments.map((comment) => (
-                          <div key={comment._id}>
-                            <TextField id="date" label="Comment Date" variant="outlined" disabled fullWidth
-                                       margin="normal" value={comment.date_time} />
-                            <TextField id="user" label="User" variant="outlined" disabled fullWidth
-                                       margin="normal"
-                                       value={comment.user.first_name + " " + comment.user.last_name}
-                                       component="a" href={"#/users/" + comment.user._id}/>
-                            <TextField id="comment" label="Comment" variant="outlined" disabled fullWidth
-                                       margin="normal" multiline rows={4} value={comment.comment} />
-                          </div>
-                      ))
-                      : (
-                          <div>
+        return this.state.user_id ? (
+            <div>
+                <div>
+                    <Button variant="contained" component="a" href={"#/users/" + this.state.user_id}>
+                        User Detail
+                    </Button>
+                </div>
+                <ImageList variant="masonry" cols={1} gap={8}>
+                    {this.state.photos ? this.state.photos.map((item) => (
+                        <div key={item._id}>
+                            <TextField label="Photo Date" variant="outlined" disabled fullWidth margin="normal"
+                                       value={item.date_time} />
+                            <ImageListItem key={item.file_name}>
+                                <img
+                                    src={`images/${item.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                    srcSet={`images/${item.file_name}?w=164&h=164&fit=crop&auto=format`}
+                                    alt={item.file_name}
+                                    loading="lazy"
+                                />
+                            </ImageListItem>
+                            <div>
+                            {item.comments ?
+                                item.comments.map((comment) => (
+                                    <div key={comment._id}>
+                                        <TextField label="Comment Date" variant="outlined" disabled fullWidth
+                                                   margin="normal" value={comment.date_time} />
+                                        <TextField label="User" variant="outlined" disabled fullWidth
+                                                   margin="normal"
+                                                   value={comment.user.first_name + " " + comment.user.last_name}
+                                                   component="a" href={"#/users/" + comment.user._id}>
+                                        </TextField>
+                                        <TextField label="Comment" variant="outlined" disabled fullWidth
+                                                   margin="normal" multiline rows={4} value={comment.comment} />
+                                    </div>
+                                ))
+                                : (
+                                    <div>
                                         <Typography>No Comments</Typography>
                                     </div>
                                 )}
                                 <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
-                                    Write Comment
+                                    Add Comment
                                 </Button>
                             </div>
                         </div>
@@ -155,7 +157,7 @@ class UserPhotos extends React.Component {
                     )}
                 </ImageList>
                 <Dialog open={this.state.add_comment}>
-                    <DialogTitle>Write Comment</DialogTitle>
+                    <DialogTitle>Add Comment</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Enter New Comment for Photo
@@ -177,11 +179,10 @@ class UserPhotos extends React.Component {
                         <Button onClick={() => {this.handleSubmitAddComment()}}>Add</Button>
                     </DialogActions>
                 </Dialog>
-        </div>
-    ) : (
-        <div/>
-    );
-  }
+            </div>
+        ) : (
+            <div/>
+        );
+    }
 }
-
 export default UserPhotos;
