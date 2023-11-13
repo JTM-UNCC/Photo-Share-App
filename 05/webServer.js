@@ -305,8 +305,8 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
             "_id": new mongoose.Types.ObjectId()
           }
         } }
-  , function (errors, returnValue) {
-    if (errors) {
+  , function (err, returnValue) {
+    if (err) {
       // Query returned an error. We pass it back to the browser with an
       // Internal Service Error (500) error code.
       console.error("Error in /commentsOfPhoto/:photo_id", err);
