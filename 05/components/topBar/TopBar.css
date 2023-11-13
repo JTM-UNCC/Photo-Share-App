@@ -2,3 +2,8 @@
   height: 60;
   justify-content: 'center';
 }
+.topbar-appBar:hover{
+  background-color: orange;
+  color: black;
+  transition:.5s;
+}
