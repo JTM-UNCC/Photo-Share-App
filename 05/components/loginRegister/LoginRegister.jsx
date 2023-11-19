@@ -143,7 +143,7 @@ class LoginRegister extends React.Component {
                             Login
                         </Button>
                     </Box>
-                    <Accordion expanded={this.state.showRegistration} onChange={this.handleShowRegistration}>
+                    <Accordion expanded={this.state.showRegistration} onChange={event => this.handleShowRegistration(event)}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel1a-content"
