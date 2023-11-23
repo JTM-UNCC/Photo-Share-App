@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  Button, TextField,
-  ImageList, ImageListItem
+    Button, TextField,
+    ImageList, ImageListItem, DialogActions, Dialog, DialogContent, DialogContentText, Typography, DialogTitle
 } from '@mui/material';
 import './userPhotos.css';
 import axios from 'axios';
@@ -15,13 +15,15 @@ class UserPhotos extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user_id : undefined,
-      photos: undefined
+        add_comment: false,
+        user_id : undefined,
+        photos: undefined
     };
   }
 
   componentDidMount() {
     const new_user_id = this.props.match.params.userId;
+    console.info(`new_user_id: ${new_user_id}`);
     this.handleUserChange(new_user_id);
   }
 
@@ -34,6 +36,7 @@ class UserPhotos extends React.Component {
   }
 
   handleUserChange(user_id){
+
     axios.get("/photosOfUser/" + user_id)
     /* fetchModel("/photosOfUser/" + user_id) */
         .then((response) =>
@@ -42,7 +45,11 @@ class UserPhotos extends React.Component {
             user_id : user_id,
             photos: response.data
           });
-        });
+        }).catch(error => {
+            this.setState({ user_id: user_id });
+            console.error(`error in userphotos ${error}`);
+    });
+
         axios.get("/user/" + user_id)
     /* fetchModel("/user/" + user_id) */
         .then((response) =>
@@ -101,7 +108,7 @@ class UserPhotos extends React.Component {
                     });
             })
             .catch( error => {
-                console.log(error);
+                console.log(`error in handleSubmit: ${error}`);
             });
     }
   render() {

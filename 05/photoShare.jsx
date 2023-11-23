@@ -67,22 +67,24 @@ class PhotoShare extends React.Component {
                         <Switch>
                           {
                             this.userIsLoggedIn() ?
-                                <Route path="/users/:userId" render={ props => <UserDetail {...props} changeMainContent={this.changeMainContent}/> }/>
+                                <Route path="/users/:userId" render={ props => <UserDetail {...props}
+                                                                                           currUser={this.state.user} changeMainContent={this.changeMainContent}/> }/>
                                 :
                                 <Redirect path="/users/:userId" to="/login-register" />
                           }
                           {
                             this.userIsLoggedIn() ?
-                                <Route path="/photos/:userId" render ={ props => <UserPhotos {...props} changeMainContent={this.changeMainContent}/> }/>
+                                <Route path="/photos/:userId" render ={ props => <UserPhotos {...props}
+                                                                                             currUser={this.state.user} changeMainContent={this.changeMainContent}/> }/>
                                 :
                                 <Redirect path="/photos/:userId" to="/login-register" />
                           }
-                          {
-                            this.userIsLoggedIn() ?
-                                <Route path="/" render={() => (<div/>)}/>
-                                :
-                                <Route path="/login-register" render ={ props => <LoginRegister {...props} changeUser={this.changeUser} changeMainContent={this.changeMainContent}/> } />
-                          }
+                          {/*{*/}
+                          {/*  this.userIsLoggedIn() ?*/}
+                          {/*      <Route path="/" render={() => (<div/>)}/>*/}
+                          {/*      :*/}
+                          {/*      <Route path="/login-register" render ={ props => <LoginRegister {...props} changeUser={this.changeUser} changeMainContent={this.changeMainContent}/> } />*/}
+                          {/*}*/}
                           {
                             this.userIsLoggedIn() ?
                                 <Route path="/" render={() => (<div/>)}/>

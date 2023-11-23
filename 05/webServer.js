@@ -66,6 +66,7 @@ mongoose.connect("mongodb://127.0.0.1/project6", {
 // We have the express static module
 // (http://expressjs.com/en/starter/static-files.html) do all the work for us.
 app.use(express.static(__dirname));
+const crypto = require("./password.js");
 
 
 function getSessionUserID(request){
@@ -198,7 +199,7 @@ app.get("/user/list", function (request, response) {
       response.status(500).send("Missing user list");
       return;
     }
-    console.log(info);
+
     response.status(200).send(JSON.stringify(info));
   });
 });
@@ -339,7 +340,7 @@ app.get("/photosOfUser/:id", function (request, response) {
     if (photos.length === 0) {
       // Query didn't return an error but didn't find the SchemaInfo object -
       // This is also an internal error return.
-      response.status(400).send();
+      response.status(400).send("length===0");
       return;
     }
     // We got the object - return it in JSON format.
@@ -387,15 +388,23 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
 });
 
 app.post("/admin/login", function(request, response){
-  console.log(request.body.login_name);
 
-  User.findOne( { "login_name": request.body.login_name }, "_id login_name first_name last_name").then(function(user, err){
-    console.log(user);
-    if (err || user == null){
-      response.status(400).send("Invalid login");
+
+  User.findOne( {
+    "login_name": request.body.login_name
+  }, "_id login_name first_name last_name location occupation description salt password_digest")
+      .then(function(user){
+    // console.log(user);
+    if (!user){
+      console.log("error" + JSON.stringify(user));
+
+      response.status(401).send("Invalid login");
     }
-    else {
-
+    else if (crypto.doesPasswordMatch(user.password_digest, user.salt, request.body.password)){
+      user = user.toObject();
+      console.log(`${user.salt}, ${user.password_digest}`);
+      delete user.salt;
+      delete user.password_digest;
       request.session.login_name = request.body.login_name;
       request.session.user_id = user._id;
       session.user_id = user._id;
@@ -421,6 +430,42 @@ app.get("/auth", function(request, response){
     response.status(200).send(true);
   }
   else response.status(401).send(false);
+});
+
+app.post("/user", function(request, response){
+  if (!request.body.login_name || !request.body.first_name || !request.body.last_name || !request.body.password){
+    response.status(400).send("Missing necessary value");
+    return;
+  }
+  User.findOne({ "login_name": request.body.login_name }, "login_name")
+      .then(function(user, err){
+        if(user){
+          response.status(400).send(`User ${request.body.login_name} already exists`);
+          return;
+        }
+        else {
+          const hash = crypto.makePasswordEntry(request.body.password);
+
+          User.create({
+            "_id": new mongoose.Types.ObjectId(),
+            "first_name": request.body.first_name,
+            "last_name": request.body.last_name,
+            "password_digest": hash.password_digest,
+            "salt": hash.salt,
+            "login_name": request.body.login_name,
+            "location": request.body.location || undefined,
+            "occupation": request.body.occupation || undefined,
+            "description": request.body.description || undefined
+          }).then(user => {
+            request.session.login_name = user.login_name;
+            request.session.user_id = user._id;
+            session.user_id = user._id;
+            response.status(200).send(JSON.stringify(user));
+          }).catch(error => {
+            response.status(400).send(error);
+          });
+        }
+      });
 });
 
 const server = app.listen(3000, function () {

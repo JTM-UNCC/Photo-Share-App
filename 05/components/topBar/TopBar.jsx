@@ -27,8 +27,9 @@ class TopBar extends React.Component {
     }
 
 
-    logout = () =>{
+    logout = () => {
         axios.post("/admin/logout", { withCredentials: true }).then(() => {
+
             this.props.changeUser(undefined);
         }).catch(error => {
             console.error(error);
@@ -81,9 +82,10 @@ class TopBar extends React.Component {
                     <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} color="inherit">{this.props.main_content}</Typography>
                     <Typography variant="h5" component="div" color="inherit">Version: {this.state.app_info.__v}</Typography>
                     {
-                        this.props.loggedIn() ?
-                            <Button variant="contained" onClick={this.logout}>Logout</Button> :
+                        !this.props.loggedIn() ? <div></div>
+                             :
                             <>
+                                <Button variant="contained" onClick={this.logout}>Logout</Button>
                                 <Divider orientation="vertical" flexItem/>
                                 <Button
                                     component="label"
