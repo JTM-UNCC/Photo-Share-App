@@ -71,6 +71,7 @@ class LoginRegister extends React.Component {
                     showRegistrationError: false,
                 });
                 this.props.changeUser(user);
+                this.props.changeMainContent("Welcome, " + user.first_name);
             })
             .catch( error => {
                 this.setState({
@@ -89,7 +90,7 @@ class LoginRegister extends React.Component {
         }
         const currentState = JSON.stringify(this.state.user);
         axios.post(
-            "/user/",
+            "/user",
             currentState,
             {
                 headers: {

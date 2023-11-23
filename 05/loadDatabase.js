@@ -26,6 +26,7 @@ const models = require("./modelData/photoApp.js").models;
 const User = require("./schema/user.js");
 const Photo = require("./schema/photo.js");
 const SchemaInfo = require("./schema/schemaInfo.js");
+const passwordUtil = require("./password.js");
 
 const versionString = "1.0";
 
@@ -45,6 +46,7 @@ Promise.all(removePromises)
     const userModels = models.userListModel();
     const mapFakeId2RealId = {};
     const userPromises = userModels.map(function (user) {
+        const password = passwordUtil.makePasswordEntry("weak");
       return User.create({
         first_name: user.first_name,
         last_name: user.last_name,
@@ -52,7 +54,8 @@ Promise.all(removePromises)
         description: user.description,
         occupation: user.occupation,
         login_name: user.last_name.toLowerCase(),
-        password: "weak",
+        password_digest: password.password_digest,
+          salt: password.salt
       })
         .then(function (userObj) {
           // Set the unique ID of the object. We use the MongoDB generated _id
