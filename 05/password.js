@@ -25,6 +25,7 @@ return { salt: salt, password_digest: encryptedPass };
  * @return {boolean}
  */
 function doesPasswordMatch(hash, salt, clearTextPassword) {
+
     const hasher = crypto.createHash("sha1");
     const newHash = hasher.update(clearTextPassword + salt).digest("hex");
 

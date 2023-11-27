@@ -211,17 +211,14 @@ app.get("/user/:id", function (request, response) {
     }
     const id = request.params.id;
     User.findOne({"_id": id}, "_id first_name last_name location description occupation")
-        .then(function (user, err) {
-            if (err) {
-                console.error("error in user/:id", err);
-                response.status(500).send(JSON.stringify(err));
-            } else if (user === null) {
+        .then(function (user) {
+            if (!user) {
                 console.log("User with _id:" + id + " not found.");
                 response.status(400).send("Not found");
                 return;
             }
             response.status(200).send(JSON.stringify(user));
-        })
+        }).catch(error => response.status(400).send(JSON.stringify(error)));
 
 
 });
@@ -279,11 +276,17 @@ app.get("/photosOfUser/:id", function (request, response) {
         return;
     }
     const id = request.params.id;
-
+    let user__id;
+    try {
+        user__id = new mongoose.Types.ObjectId(id);
+    } catch(e){
+        response.status(400).send(JSON.stringify(e));
+        return;
+    }
     Photo.aggregate([
         {
             "$match":
-                {"user_id": {"$eq": new mongoose.Types.ObjectId(id)}}
+                {"user_id": {"$eq": user__id}}
         },
         {
             "$addFields": {
@@ -337,23 +340,24 @@ app.get("/photosOfUser/:id", function (request, response) {
                 "comments.user.__v": 0
             }
         }
-    ], function (err, photos) {
-        if (err) {
-            // Query returned an error. We pass it back to the browser with an
-            // Internal Service Error (500) error code.
-            console.error("Error in /photosOfUser/:id", err);
-            response.status(500).send(JSON.stringify(err));
-            return;
-        }
-        if (photos.length === 0) {
+    ]).then(function (photos) {
+        if (photos.length == 0 || !photos) {
             // Query didn't return an error but didn't find the SchemaInfo object -
             // This is also an internal error return.
             response.status(400).send("length===0");
             return;
         }
+        //deleting unnecessary values
+        photos.map(value => {
+            value.comments.map(comment => {
+                delete comment.user.login_name;
+                delete comment.user.password_digest;
+                delete comment.user.salt;
+            });
+        });
         // We got the object - return it in JSON format.
         response.end(JSON.stringify(photos));
-    });
+    }).catch(error => response.status(400).send(JSON.stringify(error)));
 });
 
 app.post("/commentsOfPhoto/:photo_id", function (request, response) {
@@ -399,19 +403,21 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
 
 app.post("/admin/login", function (request, response) {
 
-
+    console.log("login request received: ")
     User.findOne({
         "login_name": request.body.login_name
     }, "_id login_name first_name last_name location occupation description salt password_digest")
         .then(function (user) {
             // console.log(user);
             if (!user) {
-                console.log("error" + JSON.stringify(user));
 
-                response.status(401).send("Invalid login");
+
+                response.status(400).send("Invalid login");
+
             } else if (crypto.doesPasswordMatch(user.password_digest, user.salt, request.body.password)) {
+
                 user = user.toObject();
-                console.log(`${user.salt}, ${user.password_digest}`);
+                // console.log(`${user.salt}, ${user.password_digest}`);
                 delete user.salt;
                 delete user.password_digest;
                 request.session.login_name = request.body.login_name;
@@ -420,7 +426,8 @@ app.post("/admin/login", function (request, response) {
 
                 response.status(200).send(JSON.stringify(user));
             }
-        });
+            else response.status(400).send("Invalid login");
+        }).catch(error => response.status(400).send(JSON.stringify(error)));
 });
 
 app.post("/admin/logout", function (request, response) {
