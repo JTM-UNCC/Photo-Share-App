@@ -256,7 +256,7 @@ app.post("/photos/new", function (request, response) {
                     user_id: new mongoose.Types.ObjectId(user_id),
                     comment: []
                 })
-                .then((returnValue) => {
+                .then(() => {
                     response.end();
                 })
                 .catch(err => {
@@ -389,7 +389,7 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
                 }
             }
         }
-        , function (err, returnValue) {
+        , function (err) {
             if (err) {
                 // Query returned an error. We pass it back to the browser with an
                 // Internal Service Error (500) error code.
@@ -403,7 +403,7 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
 
 app.post("/admin/login", function (request, response) {
 
-    console.log("login request received: ")
+
     User.findOne({
         "login_name": request.body.login_name
     }, "_id login_name first_name last_name location occupation description salt password_digest")
@@ -461,10 +461,10 @@ app.post("/user", function (request, response) {
         return;
     }
     User.findOne({"login_name": request.body.login_name}, "login_name")
-        .then(function (user, err) {
+        .then(function (user) {
             if (user) {
                 response.status(400).send(`User ${request.body.login_name} already exists`);
-                return;
+
             } else {
                 const hash = crypto.makePasswordEntry(request.body.password);
 
@@ -472,7 +472,7 @@ app.post("/user", function (request, response) {
                     "_id": new mongoose.Types.ObjectId(),
                     "first_name": request.body.first_name,
                     "last_name": request.body.last_name,
-                    "password_digest": hash.password_digest,
+                    "password_digest": hash.hash,
                     "salt": hash.salt,
                     "login_name": request.body.login_name,
                     "location": request.body.location || undefined,
