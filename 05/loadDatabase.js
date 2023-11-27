@@ -54,7 +54,7 @@ Promise.all(removePromises)
         description: user.description,
         occupation: user.occupation,
         login_name: user.last_name.toLowerCase(),
-        password_digest: password.password_digest,
+        password_digest: password.hash,
           salt: password.salt
       })
         .then(function (userObj) {
