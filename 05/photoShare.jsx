@@ -14,7 +14,9 @@ import UserDetail from './components/userDetail/userDetail';
 import UserList from './components/userList/userList';
 import UserPhotos from './components/userPhotos/userPhotos';
 import LoginRegister from "./components/loginRegister/LoginRegister";
-import {Redirect} from "react-router";
+import {Redirect, withRouter} from "react-router";
+import axios from "axios";
+import PrivateRoute from "./components/privateRoute/privateRoute";
 
 class PhotoShare extends React.Component {
   constructor(props) {
@@ -25,6 +27,7 @@ class PhotoShare extends React.Component {
     };
     this.changeMainContent = this.changeMainContent.bind(this);
     this.changeUser = this.changeUser.bind(this);
+    this.userIsLoggedIn = this.userIsLoggedIn.bind(this);
   }
 
   changeMainContent = (main_content) => {
@@ -37,6 +40,27 @@ class PhotoShare extends React.Component {
 
   changeUser = (user) => {
     this.setState({user: user});
+  }
+  checkAuth(){
+
+    axios.post("/auth", {}, { withCredentials: true })
+        .then(response => {
+          if(response.status !== 200){
+            return;
+          }
+          this.changeUser(response.data);
+        }).catch(err => console.error(err));
+
+  }
+  handleLoad(){
+    if (this.state.user != undefined){
+      return;
+    }
+    this.checkAuth();
+  }
+
+  componentDidMount() {
+    setTimeout(() => this.handleLoad(), 50);
   }
 
 
@@ -65,32 +89,54 @@ class PhotoShare extends React.Component {
               <Grid item sm={9}>
                 <Paper className="main-grid-item">
                         <Switch>
-                          {
-                            this.userIsLoggedIn() ?
-                                <Route path="/users/:userId" render={ props => <UserDetail {...props}
-                                                                                           currUser={this.state.user} changeMainContent={this.changeMainContent}/> }/>
-                                :
-                                <Redirect path="/users/:userId" to="/login-register" />
-                          }
-                          {
-                            this.userIsLoggedIn() ?
-                                <Route path="/photos/:userId" render ={ props => <UserPhotos {...props}
-                                                                                             currUser={this.state.user} changeMainContent={this.changeMainContent}/> }/>
-                                :
-                                <Redirect path="/photos/:userId" to="/login-register" />
-                          }
+                          {/*{*/}
+                          {/*  this.userIsLoggedIn() ?*/}
+                          {/*      <Route path="/users/:userId" render={ props => <UserDetail {...props}*/}
+                          {/*                                                                 currUser={this.state.user} changeMainContent={this.changeMainContent}/> }/>*/}
+                          {/*      :*/}
+                          {/*      <Redirect path="/users/:userId" to="/login-register" />*/}
+                          {/*}*/}
+                          {/*{*/}
+                          {/*  this.userIsLoggedIn() ?*/}
+                          {/*      <Route path="/photos/:userId" render ={ props => <UserPhotos {...props}*/}
+                          {/*                                                                   currUser={this.state.user} changeMainContent={this.changeMainContent}/> }/>*/}
+                          {/*      :*/}
+                          {/*      <Redirect path="/photos/:userId" to="/login-register" />*/}
+                          {/*}*/}
+                          {/*/!*{*!/*/}
+                          {/*/!*  this.userIsLoggedIn() ?*!/*/}
+                          {/*/!*      <Route path="/" render={() => (<div/>)}/>*!/*/}
+                          {/*/!*      :*!/*/}
+                          {/*/!*      <Route path="/login-register" render ={ props => <LoginRegister {...props} changeUser={this.changeUser} changeMainContent={this.changeMainContent}/> } />*!/*/}
+                          {/*/!*}*!/*/}
                           {/*{*/}
                           {/*  this.userIsLoggedIn() ?*/}
                           {/*      <Route path="/" render={() => (<div/>)}/>*/}
                           {/*      :*/}
-                          {/*      <Route path="/login-register" render ={ props => <LoginRegister {...props} changeUser={this.changeUser} changeMainContent={this.changeMainContent}/> } />*/}
+                          {/*      <Route path="/" render ={ props => <LoginRegister {...props} changeUser={this.changeUser} changeMainContent={this.changeMainContent}/> } />*/}
                           {/*}*/}
-                          {
-                            this.userIsLoggedIn() ?
-                                <Route path="/" render={() => (<div/>)}/>
-                                :
-                                <Route path="/" render ={ props => <LoginRegister {...props} changeUser={this.changeUser} changeMainContent={this.changeMainContent}/> } />
-                          }
+
+                          <Route path="/login-register" render={props => {
+                            return !this.userIsLoggedIn() ?
+                                <LoginRegister {...props} changeUser={this.changeUser}
+                                               changeMainContent={this.changeMainContent}/> :
+                                <Redirect to="/" from="/login-register"/>
+                          }}/>
+
+                              <PrivateRoute path="/users/:userId" currUser={this.state.user}
+                                            changeMainContent={this.changeMainContent}
+                                            userIsLoggedIn={this.userIsLoggedIn}
+                                            RoutedComponent={UserDetail}
+                              />
+
+                              <PrivateRoute path="/photos/:userId" currUser={this.state.user}
+                                            changeMainContent={this.changeMainContent}
+                                            userIsLoggedIn={this.userIsLoggedIn}
+                                            RoutedComponent={UserPhotos}
+                              />
+
+                              <PrivateRoute path="/" userIsLoggedIn={this.userIsLoggedIn}/>
+
                         </Switch>
                 </Paper>
               </Grid>

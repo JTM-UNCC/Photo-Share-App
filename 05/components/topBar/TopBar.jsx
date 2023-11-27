@@ -28,7 +28,7 @@ class TopBar extends React.Component {
 
 
     logout = () => {
-        axios.post("/admin/logout", { withCredentials: true }).then(() => {
+        axios.post("/admin/logout", {}, { withCredentials: true }).then(() => {
 
             this.props.changeUser(undefined);
         }).catch(error => {

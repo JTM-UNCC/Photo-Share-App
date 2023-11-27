@@ -19,19 +19,23 @@ class UserDetail extends React.Component {
         };
     }
     componentDidMount() {
+        //console.info("userDetail componentDidMount");
         const new_user_id = this.props.match.params.userId;
         this.handleUserChange(new_user_id);
     }
 
     componentDidUpdate() {
+        console.info("componentDidUpdate in userDetails");
         const new_user_id = this.props.match.params.userId;
         const current_user_id = this.state.user?._id;
         if (current_user_id  !== new_user_id){
+            //console.info(`making http request, new_user_id = ${new_user_id}, current_user_id = ${current_user_id}`);
             this.handleUserChange(new_user_id);
         }
     }
 
     handleUserChange(user_id){
+        //console.info(`handleUserChange called with user_id: ${user_id} in userDetail`);
         axios.get("/user/" + user_id)
         /* fetchModel("/user/" + user_id) */
             .then((response) =>
