@@ -4,6 +4,16 @@ import {Route} from "react-router-dom";
 import UserDetail from "../userDetail/userDetail";
 import UserPhotos from "../userPhotos/userPhotos";
 
+/**
+ * Higher-order component wrapper for Routes. Will redirect to /login-register
+ * if authentication fails
+ *
+ * @props
+ *  - RoutedComponent: the component to be displayed upon authentication
+ *  - auth: pass userIsLoggedIn() method from photoshare.jsx here
+ *  - any other props passed will be passed down to the RoutedComponent provided
+ *
+ */
 class PrivateRoute extends React.Component {
 
     constructor(props) {
@@ -14,8 +24,8 @@ class PrivateRoute extends React.Component {
     render() {
         const RoutedComponent = this.props.RoutedComponent;
         return (
-            <Route path={this.props.path} render={(props) => this.props.userIsLoggedIn() ?
-                (RoutedComponent ? <RoutedComponent {...props} {...this.props}
+            <Route {...this.props} render={(props) => this.props.auth() ?
+                (RoutedComponent ? <RoutedComponent {...props}
                                                     /> : <div/>) :
                 <Redirect to="/login-register" from={window.location.href}/>}
             />
