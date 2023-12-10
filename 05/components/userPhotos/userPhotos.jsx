@@ -127,6 +127,7 @@ class UserPhotos extends React.Component {
 
   render() {
       console.log("lalalala");
+      console.log("apple", this.state.photos);
         return this.state.user_id ? (
             <div>
                 <div>
