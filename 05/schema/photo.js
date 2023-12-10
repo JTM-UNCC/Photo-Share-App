@@ -38,4 +38,4 @@ const Photo = mongoose.model("Photo", photoSchema);
 /**
  * Make this available to our application.
  */
-module.exports = {Photo, Comment};
+module.exports = Photo;
