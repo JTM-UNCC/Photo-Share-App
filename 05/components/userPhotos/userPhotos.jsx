@@ -160,9 +160,10 @@ class UserPhotos extends React.Component {
                                         </TextField>
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
-                                        <Button comment_id={item._id} variant="contained" onClick={this.handleDeleteComment}>
+                                        <Button comment_id={comment._id} variant="contained" onClick={this.handleDeleteComment}>
                                             Delete Comment
                                         </Button>
+
                                     </div>
                                 )) : (
                                     <div>
