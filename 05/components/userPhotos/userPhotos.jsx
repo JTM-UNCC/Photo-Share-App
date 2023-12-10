@@ -163,7 +163,7 @@ class UserPhotos extends React.Component {
                                         <Button comment_id={comment._id} variant="contained" onClick={this.handleDeleteComment}>
                                             Delete Comment
                                         </Button>
-                                        Hello
+
 
                                     </div>
                                 )) : (
@@ -171,9 +171,9 @@ class UserPhotos extends React.Component {
                                         <Typography>No Comments</Typography>
                                     </div>
                                 )}
-                                <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
-                                    Add Comment
-                                </Button>
+                                {/*<Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>*/}
+                                {/*    Add Comment*/}
+                                {/*</Button>*/}
 
                             </div>
                         </div>
