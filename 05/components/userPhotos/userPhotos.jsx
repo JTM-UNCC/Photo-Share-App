@@ -111,6 +111,24 @@ class UserPhotos extends React.Component {
                 console.log(`error in handleSubmit: ${error}`);
             });
     }
+
+
+    // HERE
+    handleDeleteComment = (event) => {
+        const photo_id = this.state.current_photo_id;
+
+        const comment_id = event.target.attributes.comment_id.value;
+
+        // THIS
+            // Check if the element exists
+            if (comment_id) {
+                // Remove the element
+                comment_id.remove();
+            } else {
+                    console.log("Element not found.");
+            }
+    }
+
   render() {
         return this.state.user_id ? (
             <div>
@@ -145,6 +163,10 @@ class UserPhotos extends React.Component {
                                         </TextField>
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
+                                        // ul and li stuff
+                                        <Button comment_id={item._id} variant="contained" onClick={this.handleDeleteComment}>
+                                            Delete Comment
+                                        </Button>
                                     </div>
                                 ))
                                 : (
@@ -155,6 +177,7 @@ class UserPhotos extends React.Component {
                                 <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
                                     Add Comment
                                 </Button>
+
                             </div>
                         </div>
                     )) : (
