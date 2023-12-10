@@ -49,8 +49,8 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const processFormBody = multer({storage: multer.memoryStorage()}).single('uploadedphoto');
-
-
+const commentSchema = require("./schema/comment.js");
+const Comment = mongoose.model("Comment", commentSchema);
 app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
 app.use(bodyParser.json());
 // XXX - Your submission should work without this line. Comment out or delete
