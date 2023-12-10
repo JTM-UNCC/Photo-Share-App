@@ -128,6 +128,7 @@ class UserPhotos extends React.Component {
   render() {
       console.log("lalalala");
       console.log("apple", this.state.photos);
+      console.log("mango", this.state.user_id)
         return this.state.user_id ? (
             <div>
                 <div>
@@ -161,9 +162,12 @@ class UserPhotos extends React.Component {
                                         </TextField>
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
-                                        <Button comment_id={comment._id} variant="contained" onClick={this.handleDeleteComment}>
-                                            Delete Comment
-                                        </Button>
+                                        {this.state.user_id === comment.user._id && (
+                                            <Button comment_id={comment._id} variant="contained" onClick={this.handleDeleteComment}>
+                                                Delete Comment
+                                            </Button>
+                                        )}
+
 
 
                                     </div>
@@ -172,9 +176,9 @@ class UserPhotos extends React.Component {
                                         <Typography>No Comments</Typography>
                                     </div>
                                 )}
-                                {/*<Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>*/}
-                                {/*    Add Comment*/}
-                                {/*</Button>*/}
+                                <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
+                                    Add Comment
+                                </Button>
 
                             </div>
                         </div>
