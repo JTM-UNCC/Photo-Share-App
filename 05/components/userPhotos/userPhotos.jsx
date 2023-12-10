@@ -115,21 +115,18 @@ class UserPhotos extends React.Component {
 
     // HERE
     handleDeleteComment = (event) => {
-        const photo_id = this.state.current_photo_id;
+            const photo_id = this.state.current_photo_id;
+            const comment_id = event.target.attributes.comment_id.value;
 
-        const comment_id = event.target.attributes.comment_id.value;
+            // Assuming comments are stored in the component state
+            const updatedComments = this.state.comments.filter(comment => comment._id !== comment_id);
 
-        // THIS
-            // Check if the element exists
-            if (comment_id) {
-                // Remove the element
-                comment_id.remove();
-            } else {
-                    console.log("Element not found.");
-            }
+            // Update the state to trigger a re-render without the deleted comment
+            this.setState({ comments: updatedComments });
     }
 
   render() {
+      console.log("lalalala");
         return this.state.user_id ? (
             <div>
                 <div>
@@ -163,13 +160,11 @@ class UserPhotos extends React.Component {
                                         </TextField>
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
-                                        // ul and li stuff
                                         <Button comment_id={item._id} variant="contained" onClick={this.handleDeleteComment}>
                                             Delete Comment
                                         </Button>
                                     </div>
-                                ))
-                                : (
+                                )) : (
                                     <div>
                                         <Typography>No Comments</Typography>
                                     </div>
