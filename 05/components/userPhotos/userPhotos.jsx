@@ -171,7 +171,7 @@ class UserPhotos extends React.Component {
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
                                         {this.state.user_id !== comment.user._id && (
-                                            <Button comment_id={comment._id} variant="contained" onClick={this.handleDeleteComment}
+                                            <Button comment_id={comment._id} variant="contained" onClick={() => this.handleDeleteComment(comment._id)}
                                             style={{"margin": "20px 0"}}
                                             >
                                                 Delete Comment
