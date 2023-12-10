@@ -167,7 +167,10 @@ class UserPhotos extends React.Component {
                                                 Delete Comment
                                             </Button>
                                         )}
-
+                                        User id: {this.state.user_id}
+                                        Comment User id: {comment.user._id}
+                                        Condition: {this.state.user_id === comment.user._id}
+                                        Condition 2: {this.state.user_id == comment.user._id}
 
 
                                     </div>
