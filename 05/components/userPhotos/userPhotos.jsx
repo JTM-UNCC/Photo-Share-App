@@ -81,6 +81,7 @@ class UserPhotos extends React.Component {
         });
     }
 
+
     handleSubmitAddComment = () => {
         const currentState = JSON.stringify({comment: this.state.new_comment});
         const photo_id = this.state.current_photo_id;
@@ -114,15 +115,22 @@ class UserPhotos extends React.Component {
 
 
     // HERE
-    handleDeleteComment = (event) => {
-            const photo_id = this.state.current_photo_id;
-            const comment_id = event.target.attributes.comment_id.value;
+    handleDeleteComment = (comment_id) => {
+        axios.delete("/comment/" + comment_id)
+            .then((response) => {
+                console.log("deleter", response.data);
+                axios.get("/photosOfUser/" + user_id)
+                    .then((response) =>
+                    {
+                        this.setState({
+                            photos: response.data
+                        });
+                    });
+                    })
+                .catch( error => {
+                    console.log(`error in handleSubmit: ${error}`);
+                });
 
-            // Assuming comments are stored in the component state
-            const updatedComments = this.state.comments.filter(comment => comment._id !== comment_id);
-
-            // Update the state to trigger a re-render without the deleted comment
-            this.setState({ comments: updatedComments });
     }
 
   render() {
