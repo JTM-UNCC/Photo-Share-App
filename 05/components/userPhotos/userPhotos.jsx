@@ -163,6 +163,7 @@ class UserPhotos extends React.Component {
                                         <Button comment_id={comment._id} variant="contained" onClick={this.handleDeleteComment}>
                                             Delete Comment
                                         </Button>
+                                        Hello
 
                                     </div>
                                 )) : (
