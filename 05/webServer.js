@@ -222,6 +222,7 @@ app.get("/user/:id", function (request, response) {
 
 
 });
+// Here - add photo functionality
 
 /**
  * URL /photos/new - adds a new photo for the current user
@@ -360,25 +361,36 @@ app.get("/photosOfUser/:id", function (request, response) {
     }).catch(error => response.status(400).send(JSON.stringify(error)));
 });
 
-app.delete("/comment/:comment_id", function (request, response) {
+
+// here - delete comment functionality
+
+app.delete("/comment/:photo_id/:comment_id", function (request, response) {
 
     if (hasNoUserSession(request, response)) return;
-    const id = request.params.comment_id || "";
-    if (id === "") {
-        response.status(400).send("id required");
+    const photo_id = request.params.photo_id || "";
+    const comment_id = request.params.comment_id || "";
+    if (photo_id === "" || comment_id === "") {
+        response.status(400).send("ids required");
         return;
     }
-    Comment.deleteOne({_id: id}).then(function () {
-        console.log("Data deleted"); // Success
-        return response.status(201).json({
-            success: true
-        })
-    }).catch(function (error) {
-        console.log(error); // Failure
-        return response.status(500).json({
-            success: false
-        })
-    })
+
+    Photo.findOneAndUpdate(
+        {_id: photo_id},
+        {$pull: {comments: {_id: comment_id}}},
+        {new: true},
+        (err, photo)=>{
+            if (err){
+                response.status(400).send("error");
+            }
+            else if (!photo){
+                response.status(400).send("photo doesn't exist");
+            }
+            else {
+                response.status(204).send("deleted");
+            }
+        }
+    )
+
 })
 
 

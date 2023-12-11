@@ -115,8 +115,8 @@ class UserPhotos extends React.Component {
 
 
     // HERE
-    handleDeleteComment = (comment_id) => {
-        axios.delete("/comment/" + comment_id)
+    handleDeleteComment = (photo_id, comment_id) => {
+        axios.delete("/comment/" + photo_id+"/"+comment_id)
             .then((response) => {
                 console.log("deleter", response.data);
                 axios.get("/photosOfUser/" + user_id)
@@ -133,8 +133,8 @@ class UserPhotos extends React.Component {
 
     }
 
+
   render() {
-      console.log("lalalala");
       console.log("apple", this.state.photos);
       console.log("mango", this.state.user_id)
         return this.state.user_id ? (
@@ -170,14 +170,13 @@ class UserPhotos extends React.Component {
                                         </TextField>
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
-                                        {this.state.user_id !== comment.user._id && (
-                                            <Button comment_id={comment._id} variant="contained" onClick={() => this.handleDeleteComment(comment._id)}
+                                        {this.state.user_id === comment.user._id && (
+                                            <Button comment_id={comment._id} variant="contained" onClick={() => this.handleDeleteComment(item._id, comment._id)}
                                             style={{"margin": "20px 0"}}
                                             >
                                                 Delete Comment
                                             </Button>
                                         )}
-
 
 
                                     </div>
