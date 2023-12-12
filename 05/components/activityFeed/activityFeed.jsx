@@ -1,3 +1,4 @@
+// Code used and inspired from user 'samjkwong'
 import React from 'react';
 import axios from 'axios';
 import './activityFeed.css';
@@ -14,7 +15,8 @@ class ActivityFeed extends React.Component {
     this.handleRefresh = this.handleRefresh.bind(this);
   }
 
-  componentDidMount() {
+  handleRefresh(event) {
+    event.preventDefault();
     axios.get('/activityFeed')
       .then((resData) => {
         this.setState({
@@ -25,9 +27,8 @@ class ActivityFeed extends React.Component {
         console.log(error.response.data);
       });
   }
-
-  handleRefresh(event) {
-    event.preventDefault();
+  
+  componentDidMount() {
     axios.get('/activityFeed')
       .then((resData) => {
         this.setState({
@@ -71,7 +72,7 @@ class ActivityFeed extends React.Component {
           <li className='collection-item' key={activity.date_time}>
             User <b>{activity.login_name}</b> logged in at <b>{activity.date_time}</b>
           </li>);
-      } else { // activity.type === 'logout'
+      } else {
         initActivities.push(
           <li className='collection-item' key={activity.date_time}>
             User <b>{activity.login_name}</b> logged out at <b>{activity.date_time}</b>
