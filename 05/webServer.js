@@ -45,6 +45,7 @@ const app = express();
 const User = require("./schema/user.js");
 const Photo = require("./schema/photo.js");
 const SchemaInfo = require("./schema/schemaInfo.js");
+const Activity = require('./schema/activity.js');
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const multer = require("multer");
@@ -166,6 +167,28 @@ app.get("/test/:p1", function (request, response) {
         // status.
         response.status(400).send("Bad param " + param);
     }
+});
+
+app.get('/activities', function (request, response) {    
+    console.log("Express/activities | Called");
+    if(request.session.user === undefined) {
+        console.error('Express/activities | 401. No user logged in.');
+        response.status(401).send();
+        return;
+    }
+
+    var query = Activity.find({}).sort("-date_time").limit(5);
+    query.exec(function(err, activities) {
+        if(err) {
+            console.error("Express/activities | Error in Mongo call: " + err);
+            response.status(400).send();
+            return;
+        } else {            
+            console.log('Express/activities | Status 200.');
+            response.status(200).send(JSON.stringify(activities));
+            return;
+        }
+    });
 });
 
 function isValidSession(req, res) {
