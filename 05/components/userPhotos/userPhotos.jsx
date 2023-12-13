@@ -124,6 +124,7 @@ class UserPhotos extends React.Component {
                         this.setState({ photos: this.state.photos.filter( pic => pic._id !== photo_id)});
                     });
                     })
+
                 .catch( error => {
                     console.log(`error in handleSubmit: ${error}`);
                 });

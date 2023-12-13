@@ -422,6 +422,34 @@ app.delete("/photo/:user_id/:photo_id", function (request, response) {
 })
 
 
+app.delete("/user/:user_id", function (request, response) {
+
+    if (hasNoUserSession(request)) return;
+    const user_id = request.params.user_id || "";
+    if (user_id === "") {
+        response.status(400).send("ids required");
+        return;
+    }
+
+    User.findOneAndDelete(
+        {_id: user_id},
+        undefined,
+        (err, user)=>{
+            if (err){
+                response.status(400).send(JSON.stringify(err));
+            }
+            else if (!user){
+                response.status(400).send("photo doesn't exist");
+            }
+            else {
+                response.status(204).send("deleted");
+            }
+        }
+    )
+
+})
+
+
 app.post("/commentsOfPhoto/:photo_id", function (request, response) {
     if (hasNoUserSession(request, response)) return;
     const id = request.params.photo_id || "";

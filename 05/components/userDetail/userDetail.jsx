@@ -51,15 +51,16 @@ class UserDetail extends React.Component {
 
     handleDeleteAccount(user_id) {
         console.log("lalala");
-        // axios.delete("/comment/" + photo_id+"/"+comment_id)
-        //     .then((response) => {
-        //         console.log("deleter", response.data);
-        //         let newPhotos = this.state.photos.filter(pic => pic._id !== photo_id);
-        //         this.setState({ photos: newPhotos });
-        //     })
-        //     .catch( error => {
-        //         console.log(`error in handleSubmit: ${error}`);
-        //     });
+        axios.delete("/user/" + user_id)
+            .then((response) => {
+                console.log("deleter", response.data);
+        // figure out how to log out
+                let newUser = this.state.user.filter(user => user._id !== user_id);
+                this.setState({ user: newUser });
+            })
+            .catch( error => {
+                console.log(`error in handleSubmit: ${error}`);
+            });
 
     }
     render() {
