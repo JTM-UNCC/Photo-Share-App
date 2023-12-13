@@ -3,70 +3,83 @@ import {
     Button, TextField,
     ImageList, ImageListItem, DialogActions, Dialog, DialogContent, DialogContentText, Typography, DialogTitle
 } from '@mui/material';
+import {MentionsInput, Mention} from 'react-mentions';
 import './userPhotos.css';
 import axios from 'axios';
+import defaultStyle from './defaultStyle';
+import defaultMentionStyle from "./defaultMentionStyle";
 
+let container;
 
 
 /**
  * Define UserPhotos, a React componment of project #5
  */
 class UserPhotos extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        add_comment: false,
-        user_id : undefined,
-        photos: undefined
-    };
-  }
-
-  componentDidMount() {
-    const new_user_id = this.props.match.params.userId;
-    console.info(`new_user_id: ${new_user_id}`);
-    this.handleUserChange(new_user_id);
-  }
-
-  componentDidUpdate() {
-    const new_user_id = this.props.match.params.userId;
-    const current_user_id = this.state.user_id;
-    if (current_user_id  !== new_user_id){
-      this.handleUserChange(new_user_id);
+    constructor(props) {
+        super(props);
+        this.state = {
+            new_comment: '',
+            add_comment: false,
+            user_id: undefined,
+            photos: undefined,
+            mentions: [],
+            mentionCount: 0
+        };
+        this.setState = this.setState.bind(this);
+        this.handleUserChange = this.handleUserChange.bind(this);
+        this.handleNewCommentChange = this.handleNewCommentChange.bind(this);
+        this.handleShowAddComment = this.handleShowAddComment.bind(this);
+        this.handleSubmitAddComment = this.handleSubmitAddComment.bind(this);
+        this.handleCancelAddComment = this.handleCancelAddComment.bind(this);
+        this.addMention = this.addMention.bind(this);
     }
-  }
 
-  handleUserChange(user_id){
+    componentDidMount() {
+        const new_user_id = this.props.match.params.userId;
+        console.info(`new_user_id: ${new_user_id}`);
+        this.handleUserChange(new_user_id);
+    }
 
-    axios.get("/photosOfUser/" + user_id)
-    /* fetchModel("/photosOfUser/" + user_id) */
-        .then((response) =>
-        {
-          this.setState({
-            user_id : user_id,
-            photos: response.data
-          });
-        }).catch(error => {
+    componentDidUpdate() {
+        const new_user_id = this.props.match.params.userId;
+        const current_user_id = this.state.user_id;
+        if (current_user_id !== new_user_id) {
+            this.handleUserChange(new_user_id);
+        }
+    }
+
+    handleUserChange(user_id) {
+
+        axios.get("/photosOfUser/" + user_id)
+            /* fetchModel("/photosOfUser/" + user_id) */
+            .then((response) => {
+                this.setState({
+                    user_id: user_id,
+                    photos: response.data
+                });
+            }).catch(error => {
             this.setState({ user_id: user_id });
             console.error(`error in userphotos ${error}`);
-    });
+        });
 
         axios.get("/user/" + user_id)
-    /* fetchModel("/user/" + user_id) */
-        .then((response) =>
-        {
-          const new_user = response.data;
-          const main_content = "User Photos for " + new_user.first_name + " " + new_user.last_name;
-          this.props.changeMainContent(main_content);
-        });
-  }
-  handleNewCommentChange = (event) => {
-        this.setState({
-            new_comment: event.target.value
-        });
+            /* fetchModel("/user/" + user_id) */
+            .then((response) => {
+                const new_user = response.data;
+                const main_content = "User Photos for " + new_user.first_name + " " + new_user.last_name;
+                this.props.changeMainContent(main_content);
+            });
+    }
+
+    handleNewCommentChange = (event) => {
+        this.setState({ new_comment: '' });
     }
 
     handleShowAddComment = (event) => {
         const photo_id = event.target.attributes.photo_id.value;
+        this.getMentionOptions();
+
         this.setState({
             add_comment: true,
             current_photo_id: photo_id
@@ -76,13 +89,32 @@ class UserPhotos extends React.Component {
     handleCancelAddComment = () => {
         this.setState({
             add_comment: false,
-            new_comment: undefined,
-            current_photo_id: undefined
+            new_comment: '',
+            current_photo_id: undefined,
+            mentionCount: 0
         });
     }
 
+    getMentionOptions = () => {
+
+        axios.get(`/mentions/users/list`,
+            { withCredentials: true, responseType: "json" })
+            .then(response => {
+                if (response.status !== 200 || response.data.length === 0) {
+                    console.info("data.length === 0");
+                    return;
+                }
+                this.setState({ userList: response.data })
+            }).catch(error => {
+            console.error(`error in mention query ${error}`);
+            return [];
+        });
+
+    }
+
     handleSubmitAddComment = () => {
-        const currentState = JSON.stringify({comment: this.state.new_comment});
+        const mentions = this.state.mentionCount;
+        const currentState = JSON.stringify({ comment: this.state.new_comment, mentions: mentions });
         const photo_id = this.state.current_photo_id;
         const user_id = this.state.user_id;
         axios.post("/commentsOfPhoto/" + photo_id,
@@ -92,26 +124,36 @@ class UserPhotos extends React.Component {
                     'Content-Type': 'application/json',
                 }
             })
-            .then((response) =>
-            {
+            .then((response) => {
                 this.setState({
-                    add_comment : false,
-                    new_comment: undefined,
-                    current_photo_id: undefined
+                    add_comment: false,
+                    new_comment: '',
+                    current_photo_id: undefined,
+                    mentionCount: 0
                 });
                 axios.get("/photosOfUser/" + user_id)
-                    .then((response) =>
-                    {
+                    .then((response) => {
                         this.setState({
                             photos: response.data
                         });
                     });
             })
-            .catch( error => {
+            .catch(error => {
                 console.log(`error in handleSubmit: ${error}`);
             });
     }
-  render() {
+    addMention = () => {
+        this.state.mentionCount++;
+    }
+
+
+
+    render() {
+        const setState = this.setState;
+        const users = this.state.userList;
+
+
+
         return this.state.user_id ? (
             <div>
                 <div>
@@ -123,7 +165,7 @@ class UserPhotos extends React.Component {
                     {this.state.photos ? this.state.photos.map((item) => (
                         <div key={item._id}>
                             <TextField label="Photo Date" variant="outlined" disabled fullWidth margin="normal"
-                                       value={item.date_time} />
+                                       value={item.date_time}/>
                             <ImageListItem key={item.file_name}>
                                 <img
                                     src={`images/${item.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
@@ -133,25 +175,25 @@ class UserPhotos extends React.Component {
                                 />
                             </ImageListItem>
                             <div>
-                            {item.comments ?
-                                item.comments.map((comment) => (
-                                    <div key={comment._id}>
-                                        <TextField label="Comment Date" variant="outlined" disabled fullWidth
-                                                   margin="normal" value={comment.date_time} />
-                                        <TextField label="User" variant="outlined" disabled fullWidth
-                                                   margin="normal"
-                                                   value={comment.user.first_name + " " + comment.user.last_name}
-                                                   component="a" href={"#/users/" + comment.user._id}>
-                                        </TextField>
-                                        <TextField label="Comment" variant="outlined" disabled fullWidth
-                                                   margin="normal" multiline rows={4} value={comment.comment} />
-                                    </div>
-                                ))
-                                : (
-                                    <div>
-                                        <Typography>No Comments</Typography>
-                                    </div>
-                                )}
+                                {item.comments ?
+                                    item.comments.map((comment) => (
+                                        <div key={comment._id}>
+                                            <TextField label="Comment Date" variant="outlined" disabled fullWidth
+                                                       margin="normal" value={comment.date_time}/>
+                                            <TextField label="User" variant="outlined" disabled fullWidth
+                                                       margin="normal"
+                                                       value={comment.user.first_name + " " + comment.user.last_name}
+                                                       component="a" href={"#/users/" + comment.user._id}>
+                                            </TextField>
+                                            <TextField label="Comment" variant="outlined" disabled fullWidth
+                                                       margin="normal" multiline rows={4} value={comment.comment}/>
+                                        </div>
+                                    ))
+                                    : (
+                                        <div>
+                                            <Typography>No Comments</Typography>
+                                        </div>
+                                    )}
                                 <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
                                     Add Comment
                                 </Button>
@@ -163,28 +205,47 @@ class UserPhotos extends React.Component {
                         </div>
                     )}
                 </ImageList>
-                <Dialog open={this.state.add_comment}>
-                    <DialogTitle>Add Comment</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Enter New Comment for Photo
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="comment"
-                            label="Comment"
-                            multiline rows={4}
-                            fullWidth
-                            variant="standard"
-                            onChange={this.handleNewCommentChange}
-                            defaultValue={this.state.new_comment}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => {this.handleCancelAddComment()}}>Cancel</Button>
-                        <Button onClick={() => {this.handleSubmitAddComment()}}>Add</Button>
-                    </DialogActions>
+                <Dialog id={"commentpane"} scroll={"paper"}
+                        open={this.state.add_comment} ref={ele => container = ele}>
+                    <div>
+                        <DialogTitle>Add Comment</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Enter New Comment for Photo
+                            </DialogContentText>
+                            <MentionsInput singleLine={false}
+                                           placeholder={"Mention people with '@'"}
+                                           id="comment" label="Comment"
+                                           fullwidth="true"
+                                           rows={4}
+                                           value={this.state.new_comment}
+                                           onChange={(ev) => {
+                                               setState({ new_comment: ev.target.value })
+                                           }}
+                                           a11ySuggestionsListLabel={"Suggested Users"}
+                                           allowSuggestionsAboveCursor
+                                           style={defaultStyle}
+                                           suggestionsPortalHost={container}
+                            >
+                                <Mention
+                                    onAdd={this.addMention}
+                                    data={users}
+                                    markup="@!{([__id__])}[(user:__display__)]!@"
+                                    displayTransform={(user, display) => `@${display}`}
+                                    style={defaultMentionStyle}
+                                    appendSpaceOnAdd
+                                />
+                            </MentionsInput>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => {
+                                this.handleCancelAddComment()
+                            }}>Cancel</Button>
+                            <Button onClick={() => {
+                                this.handleSubmitAddComment()
+                            }}>Add</Button>
+                        </DialogActions>
+                    </div>
                 </Dialog>
             </div>
         ) : (
@@ -192,4 +253,5 @@ class UserPhotos extends React.Component {
         );
     }
 }
+
 export default UserPhotos;

@@ -66,6 +66,7 @@ mongoose.connect("mongodb://127.0.0.1/project6", {
 // (http://expressjs.com/en/starter/static-files.html) do all the work for us.
 app.use(express.static(__dirname));
 const crypto = require("./password.js");
+const { get } = require("mongoose");
 
 
 function getSessionUserID(request) {
@@ -359,12 +360,52 @@ app.get("/photosOfUser/:id", function (request, response) {
         response.end(JSON.stringify(photos));
     }).catch(error => response.status(400).send(JSON.stringify(error)));
 });
+/**
+ * Function to test if a user id provided is a valid hex string. Used to prevent injection attacks
+ * @param string the value to test
+ * @returns {boolean} true if the value is a valid hex string
+ */
+checkIfHex = (string) => {
+    const re = new RegExp(/[0-9A-Fa-f]+/);
+    return re.test(string);
+}
 
-app.post("/commentsOfPhoto/:photo_id", function (request, response) {
+parseMarkup = (commentMarkup) => {
+    let comment = commentMarkup;
+
+    let mentions = [];
+    //markup = "@!{([__id__])}[(user:__display__)]!@"
+
+    comment = comment.split("@!{([");
+    for (let k = 1; k < comment.length; k++) {
+
+        let temp = comment[k].split("])}[(user:");
+
+        comment[k] = temp[1];
+        mentions.push(temp[0]);
+    }
+
+    comment = comment.join("@");
+
+    comment = comment.split(")]!@").join("");
+
+    console.info(comment, mentions);
+
+    return { comment: comment, mentions: mentions };
+
+}
+
+app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
     if (hasNoUserSession(request, response)) return;
+    const mentionNum = request.body.mentions;
+
+    let { comment, mentions } = (mentionNum > 0) ?
+        parseMarkup(request.body.comment)
+        : request.body.comment || "";
+
     const id = request.params.photo_id || "";
     const user_id = getSessionUserID(request) || "";
-    const comment = request.body.comment || "";
+
     if (id === "") {
         response.status(400).send("id required");
         return;
@@ -377,6 +418,21 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
         response.status(400).send("comment required");
         return;
     }
+    if(mentions?.length > 0){
+        console.info("checking mentions");
+        console.info(mentions);
+        let temp = [];
+        for (let mention of mentions){
+            await User.findOne({ "_id": mention }, "_id")
+                .then(user => {
+                    if (user) temp.push(user);
+                    console.warn("user found: " + user + temp);
+                }).catch(error => console.log(error));
+        }
+        mentions = temp;
+        console.log("mentions:" + mentions);
+    }
+    console.log("Mentions, right before update:" + mentions);
     Photo.updateOne(
         {_id: new mongoose.Types.ObjectId(id)},
         {
@@ -385,7 +441,8 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
                     "comment": comment,
                     "date_time": new Date(),
                     "user_id": new mongoose.Types.ObjectId(user_id),
-                    "_id": new mongoose.Types.ObjectId()
+                    "_id": new mongoose.Types.ObjectId(),
+                    "mention_ids": mentions || []
                 }
             }
         }
@@ -399,6 +456,45 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
             }
             response.end();
         });
+});
+
+app.get("/mentions/user/:userId", function(request, response){
+    if (hasNoUserSession(request, response)) return;
+
+    let user_id = request.params.userId;
+
+    Photo.find({}, "file_name user_id comments")
+        .populate("comments","mention_ids date_time", undefined, { "mention_ids": user_id})
+        .then(photos => {
+            let newPhotos = photos.filter(photo => {
+                let bool = false;
+                photo.comments?.map(comment => {
+
+                    if (comment.mention_ids.includes(user_id)) {
+                        bool = true;
+
+                    }
+
+                });
+
+                return bool;
+                });
+            // photos.map(photo => console.info(photo.comments));
+
+            if (newPhotos.length > 0) {
+                // newPhotos = newPhotos.map(newPhoto => {
+                //     newPhoto.user = User
+                //         .findOne({ "_id": user_id }, "first_name last_name _id");
+                //     console.log("newPhoto user: " + newPhoto.user);
+                // });
+
+
+            }
+            newPhotos.map(val => console.log(val + ": value before send"));
+            response.status(200).send(JSON.stringify(newPhotos));
+            }).catch(error => {
+                response.status(400).send(JSON.stringify(error));
+    });
 });
 
 app.post("/admin/login", function (request, response) {
@@ -488,6 +584,24 @@ app.post("/user", function (request, response) {
                 });
             }
         });
+});
+
+app.get("/mentions/users/list", function(request, response){
+    if (hasNoUserSession(request, response)) return;
+
+    User.find( {}, "login_name _id")
+        .then(users => {
+            let userList = new Array(users.length);
+            for (let i = 0; i < users.length; i++){
+                const id = users[i]._id;
+                const display = users[i].login_name;
+                userList[i] = { id: id, display: display };
+            }
+        response.status(200).send(JSON.stringify(userList));
+    }).catch(error => {
+        console.error(error);
+        response.status(500).send(JSON.stringify(error));
+    });
 });
 
 const server = app.listen(3000, function () {
