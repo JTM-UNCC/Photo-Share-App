@@ -100,6 +100,10 @@ class TopBar extends React.Component {
                                         onChange={this.handleNewPhoto}
                                     />
                                 </Button>
+                                <Divider orientation="vertical" flexItem/>
+                                <Link to={"/activityFeed/"}>
+                                    <button>Activity Feed</button>
+                                </Link>
                             </>
                     }
                 </Toolbar>
