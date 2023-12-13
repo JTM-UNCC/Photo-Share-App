@@ -134,17 +134,13 @@ class UserPhotos extends React.Component {
       axios.delete("/photo/" + user_id + "/" + photo_id)
             .then((response) => {
                 console.log("deleter", response.data);
-                axios.get("/photosOfUser/" + this.state.user_id)
-                    .then((response) =>
-                    {
-                        this.setState({
-                            photos: response.data
-                        });
-                    });
+                let newPhotos = this.state.photos.filter(pic => pic._id !== photo_id);
+                this.setState({ photos: newPhotos });
             })
-            .catch( error => {
-                console.log(`error in handleSubmit: ${error}`);
-            });
+          .catch( error => {
+              console.log(`error in handleSubmit: ${error}`);
+          });
+
     }
 
 

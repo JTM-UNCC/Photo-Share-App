@@ -50,7 +50,16 @@ class UserDetail extends React.Component {
     }
 
     handleDeleteAccount(user_id) {
-        console.log("say lalalalala");
+        console.log("lalala");
+        // axios.delete("/comment/" + photo_id+"/"+comment_id)
+        //     .then((response) => {
+        //         console.log("deleter", response.data);
+        //         let newPhotos = this.state.photos.filter(pic => pic._id !== photo_id);
+        //         this.setState({ photos: newPhotos });
+        //     })
+        //     .catch( error => {
+        //         console.log(`error in handleSubmit: ${error}`);
+        //     });
 
     }
     render() {
@@ -90,9 +99,9 @@ class UserDetail extends React.Component {
                     </div>
                     {this.props.currUser._id === this.state.user._id && (
                         <Button
-                            // photo_id={item._id}
+                            user_id={this.props.currUser._id}
                             variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
-                            style={{"margin": "20px 0"}}
+                            style={{"margin": "20px 0", "backgroundColor": "#bf0300"}}
                         >
                             Delete Account
                         </Button>
