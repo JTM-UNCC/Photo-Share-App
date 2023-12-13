@@ -22,7 +22,7 @@ class PrivateRoute extends React.Component {
     }
 
     render() {
-
+        // not sure why i have to pass props 3 times. i give up
         let { RoutedComponent, ...rest } = this.props;
         return (
             <Route {...this.props} render={(props) => this.props.auth() ?

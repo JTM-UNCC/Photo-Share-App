@@ -1,8 +1,8 @@
 import React from 'react';
 import {
     Box,
-    Button,
-    TextField
+    Button, ImageList, ImageListItem, Link,
+    TextField, Typography
 } from '@mui/material';
 import './userDetail.css';
 import axios from 'axios';
@@ -15,7 +15,8 @@ class UserDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined
+            user: undefined,
+            userMentionPhotos: undefined
         };
     }
     componentDidMount() {
@@ -47,6 +48,14 @@ class UserDetail extends React.Component {
                 const main_content = "User Details for " + new_user.first_name + " " + new_user.last_name;
                 this.props.changeMainContent(main_content);
             });
+        axios.get("/mentions/user/" + user_id)
+            .then(response => {
+                this.setState({ userMentionPhotos: response.data });
+            }).catch(error => console.error("Error fetching user mentions" + error));
+    }
+
+    getUser = (userId) => {
+
     }
 
     render() {
@@ -83,6 +92,23 @@ class UserDetail extends React.Component {
                                    margin="normal"
                                    value={this.state.user.occupation}/>
                     </div>
+
+                    <ImageList sx={{ width: 500, height: 450 }} cols={3}>
+                        {this.state.userMentionPhotos ? this.state.userMentionPhotos.map(photo => (
+                                <Link to={"photo-share.html#/users/" + photo.user_id}>
+                                    <ImageListItem key={photo.file_name}>
+                                        <img
+                                            src={`images/${photo.file_name}?w=80&h=80&fit=crop&auto=format&dpr=2 2x`}
+                                            srcSet={`images/${photo.file_name}?w=80&h=80&fit=crop&auto=format`}
+                                            alt={photo.file_name}
+                                            loading="lazy"
+                                        />
+                                    </ImageListItem>
+                                </Link>
+                        )) :
+                        <Typography>No Photos Found</Typography>
+                        }
+                    </ImageList>
                 </Box>
             </div>
         ) : (
