@@ -102,20 +102,35 @@ class PhotoShare extends React.Component {
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserDetail}
                                     />
+
+                                    {/*I made these two because I can't access currUser - Veena*/}
                                     <UserPhotos path="/users/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserDetail}
                                     />
+                                    <UserDetail path="/users/:userId" currUser={this.state.user}
+                                                changeMainContent={this.changeMainContent}
+                                                auth={this.userIsLoggedIn}
+                                                RoutedComponent={UserDetail}
+                                    />
+
+
                                     <PrivateRoute path="/photos/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
                                     />
+                                    {/*And these two - Veena*/}
                                     <UserPhotos path="/photos/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
+                                    />
+                                    <UserDetail path="/photos/:userId" currUser={this.state.user}
+                                                changeMainContent={this.changeMainContent}
+                                                auth={this.userIsLoggedIn}
+                                                RoutedComponent={UserPhotos}
                                     />
 
                                     <PrivateRoute path="/" auth={this.userIsLoggedIn}/>

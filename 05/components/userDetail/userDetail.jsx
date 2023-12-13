@@ -49,7 +49,12 @@ class UserDetail extends React.Component {
             });
     }
 
+    handleDeleteAccount(user_id) {
+        console.log("say lalalalala");
+
+    }
     render() {
+
         return this.state.user ? (
             <div>
                 <Box component="form" noValidate autoComplete="off">
@@ -83,12 +88,22 @@ class UserDetail extends React.Component {
                                    margin="normal"
                                    value={this.state.user.occupation}/>
                     </div>
+                    {this.props.currUser._id === this.state.user._id && (
+                        <Button
+                            // photo_id={item._id}
+                            variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
+                            style={{"margin": "20px 0"}}
+                        >
+                            Delete Account
+                        </Button>
+                    )}
                 </Box>
             </div>
         ) : (
             <div/>
         );
     }
+
 }
 
 export default UserDetail;

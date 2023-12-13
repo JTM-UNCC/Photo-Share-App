@@ -131,8 +131,6 @@ class UserPhotos extends React.Component {
     }
 
     handleDeletePhoto = (user_id, photo_id) => {
-      console.log("lalala", user_id, photo_id);
-      // change to comment to photo
       axios.delete("/photo/" + user_id + "/" + photo_id)
             .then((response) => {
                 console.log("deleter", response.data);
