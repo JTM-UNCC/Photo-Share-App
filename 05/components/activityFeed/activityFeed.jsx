@@ -88,7 +88,7 @@ class ActivityFeed extends React.Component {
     }
     return (
       <ul className='collection'>
-        <button onClick={this.handleRefresh}>Refresh</button>
+        <button style={{background: '#64CCC5', color: '#04364A'}} onClick={this.handleRefresh}>Refresh</button>
         {initiate}
       </ul>
     );

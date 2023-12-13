@@ -54,7 +54,7 @@ class UserDetail extends React.Component {
             <div>
                 <Box component="form" noValidate autoComplete="off">
                     <div>
-                        <Button variant="contained" component="a" href={"#/photos/" + this.state.user._id}>
+                        <Button style={{background: '#64CCC5', color: '#04364A'}} variant="contained" component="a" href={"#/photos/" + this.state.user._id}>
                             User Photos
                         </Button>
                     </div>

@@ -1,11 +1,11 @@
-.topbar-appBar {
+.AppBar {
   height: 60;
   justify-content: 'center';
+  background-color: #04364A;
 }
-.topbar-appBar:hover{
-  background-color: orange;
-  color: black;
-  transition:.5s;
+
+.Button{
+  color: #176B87
 }
 
 

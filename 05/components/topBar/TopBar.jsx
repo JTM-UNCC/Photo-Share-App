@@ -75,19 +75,27 @@ class TopBar extends React.Component {
 
     render() {
         return this.state.app_info ? (
-            <AppBar className="topbar-appBar" position="absolute">
+            <AppBar
+                style={{ background: '#04364A'}}
+                className="topbar-appBar"
+                position="absolute">
                 <Toolbar>
-                    <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>ITSC 3155 Group 4</Typography>
+                    <Typography style={{fontFamily:'Lucida Handwriting'}} className = "top-text" variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                        ITSC 3155 Group 4</Typography>
 
-                    <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} color="inherit">{this.props.main_content}</Typography>
-                    <Typography variant="h5" component="div" color="inherit">Version: {this.state.app_info.__v}</Typography>
+                    <Typography style={{fontFamily:'Lucida Handwriting'}} variant="h5" component="div" sx={{ flexGrow: 1 }} color="inherit">{this.props.main_content}</Typography>
+                    <Typography style={{fontFamily:'Lucida Handwriting'}} variant="h5" component="div" color="inherit">Version: {this.state.app_info.__v}</Typography>
                     {
                         !this.props.loggedIn() ? <div></div>
                              :
                             <>
-                                <Button variant="contained" onClick={this.logout}>Logout</Button>
+                                <Button style={{background: '#64CCC5', color: '#04364A', fontFamily:'Georgia'}}
+                                        className ="Button"
+                                        variant="contained"
+                                        onClick={this.logout}>Logout</Button>
                                 <Divider orientation="vertical" flexItem/>
                                 <Button
+                                    style={{background:'#64CCC5', color: '#04364A', fontFamily:'Georgia'}}
                                     component="label"
                                     variant="contained"
                                 >

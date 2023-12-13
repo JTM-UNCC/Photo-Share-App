@@ -115,7 +115,7 @@ class UserPhotos extends React.Component {
         return this.state.user_id ? (
             <div>
                 <div>
-                    <Button variant="contained" component="a" href={"#/users/" + this.state.user_id}>
+                    <Button style={{background: '#64CCC5', color: '#04364A'}} variant="contained" component="a" href={"#/users/" + this.state.user_id}>
                         User Detail
                     </Button>
                 </div>
@@ -152,7 +152,7 @@ class UserPhotos extends React.Component {
                                         <Typography>No Comments</Typography>
                                     </div>
                                 )}
-                                <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
+                                <Button style={{background: '#64CCC5', color: '#04364A'}} photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
                                     Add Comment
                                 </Button>
                             </div>
@@ -182,8 +182,8 @@ class UserPhotos extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => {this.handleCancelAddComment()}}>Cancel</Button>
-                        <Button onClick={() => {this.handleSubmitAddComment()}}>Add</Button>
+                        <Button style={{background: '#64CCC5', color: '#04364A'}} onClick={() => {this.handleCancelAddComment()}}>Cancel</Button>
+                        <Button style={{background: '#64CCC5', color: '#04364A'}} onClick={() => {this.handleSubmitAddComment()}}>Add</Button>
                     </DialogActions>
                 </Dialog>
             </div>
