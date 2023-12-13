@@ -35,7 +35,7 @@ class ActivityFeed extends React.Component {
             </div>
           );
         })}
-        <button onClick={this.refreshButton}>Refresh the feed</button> 
+        <button onClick={this.refreshButton}>Refresh</button> 
       </div>
     );
   }  
