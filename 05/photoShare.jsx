@@ -102,11 +102,22 @@ class PhotoShare extends React.Component {
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserDetail}
                                     />
+                                    <UserPhotos path="/users/:userId" currUser={this.state.user}
+                                                  changeMainContent={this.changeMainContent}
+                                                  auth={this.userIsLoggedIn}
+                                                  RoutedComponent={UserDetail}
+                                    />
                                     <PrivateRoute path="/photos/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
                                     />
+                                    <UserPhotos path="/photos/:userId" currUser={this.state.user}
+                                                  changeMainContent={this.changeMainContent}
+                                                  auth={this.userIsLoggedIn}
+                                                  RoutedComponent={UserPhotos}
+                                    />
+
                                     <PrivateRoute path="/" auth={this.userIsLoggedIn}/>
                                 </Switch>
                             </Paper>

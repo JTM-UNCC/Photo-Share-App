@@ -37,7 +37,7 @@ class UserDetail extends React.Component {
     handleUserChange(user_id){
         //console.info(`handleUserChange called with user_id: ${user_id} in userDetail`);
         axios.get("/user/" + user_id)
-        /* fetchModel("/user/" + user_id) */
+            /* fetchModel("/user/" + user_id) */
             .then((response) =>
             {
                 const new_user = response.data;

@@ -22,11 +22,12 @@ class PrivateRoute extends React.Component {
     }
 
     render() {
-        const RoutedComponent = this.props.RoutedComponent;
+        // not sure why i have to pass props 3 times. i give up
+        let { RoutedComponent, ...rest } = this.props;
         return (
             <Route {...this.props} render={(props) => this.props.auth() ?
-                (RoutedComponent ? <RoutedComponent {...props}
-                                                    /> : <div/>) :
+                (RoutedComponent ? <RoutedComponent {...rest} {...props}
+                /> : <div/>) :
                 <Redirect to="/login-register" from={window.location.href}/>}
             />
         );
@@ -34,5 +35,6 @@ class PrivateRoute extends React.Component {
 
     }
 }
+
 
 export default PrivateRoute;

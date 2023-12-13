@@ -114,17 +114,14 @@ class UserPhotos extends React.Component {
     }
 
 
-    // HERE
     handleDeleteComment = (photo_id, comment_id) => {
         axios.delete("/comment/" + photo_id+"/"+comment_id)
             .then((response) => {
                 console.log("deleter", response.data);
-                axios.get("/photosOfUser/" + user_id)
+                axios.get("/photosOfUser/" + this.state.user_id)
                     .then((response) =>
                     {
-                        this.setState({
-                            photos: response.data
-                        });
+                        this.setState({ photos: this.state.photos.filter( pic => pic._id !== photo_id)});
                     });
                     })
                 .catch( error => {
@@ -133,10 +130,29 @@ class UserPhotos extends React.Component {
 
     }
 
+    handleDeletePhoto = (user_id, photo_id) => {
+      console.log("lalala", user_id, photo_id);
+      // change to comment to photo
+      axios.delete("/photo/" + user_id + "/" + photo_id)
+            .then((response) => {
+                console.log("deleter", response.data);
+                axios.get("/photosOfUser/" + this.state.user_id)
+                    .then((response) =>
+                    {
+                        this.setState({
+                            photos: response.data
+                        });
+                    });
+            })
+            .catch( error => {
+                console.log(`error in handleSubmit: ${error}`);
+            });
+    }
+
 
   render() {
       console.log("apple", this.state.photos);
-      console.log("mango", this.state.user_id)
+      console.log("mango", this.props.currUser._id);
         return this.state.user_id ? (
             <div>
                 <div>
@@ -156,6 +172,17 @@ class UserPhotos extends React.Component {
                                     alt={item.file_name}
                                     loading="lazy"
                                 />
+
+                            <div>
+                                {this.props.currUser._id === this.state.user_id && (
+                                    <Button
+                                        photo_id={item._id} variant="contained" onClick={() => this.handleDeletePhoto(this.state.user_id, item._id)}
+                                            style={{"margin": "20px 0"}}
+                                    >
+                                        Delete Photo
+                                    </Button>
+                                )}
+                            </div>
                             </ImageListItem>
                             <div>
                             {item.comments ?
@@ -170,7 +197,7 @@ class UserPhotos extends React.Component {
                                         </TextField>
                                         <TextField label="Comment" variant="outlined" disabled fullWidth
                                                    margin="normal" multiline rows={4} value={comment.comment} />
-                                        {this.state.user_id === comment.user._id && (
+                                        {this.props.currUser._id === comment.user._id && (
                                             <Button comment_id={comment._id} variant="contained" onClick={() => this.handleDeleteComment(item._id, comment._id)}
                                             style={{"margin": "20px 0"}}
                                             >

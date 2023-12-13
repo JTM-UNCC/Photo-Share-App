@@ -393,6 +393,34 @@ app.delete("/comment/:photo_id/:comment_id", function (request, response) {
 
 })
 
+app.delete("/photo/:user_id/:photo_id", function (request, response) {
+
+    if (hasNoUserSession(request, response)) return;
+    const photo_id = request.params.photo_id || "";
+    const user_id = request.params.user_id || "";
+    if (photo_id === "" || user_id === "") {
+        response.status(400).send("ids required");
+        return;
+    }
+
+    Photo.findOneAndDelete(
+        {_id: photo_id},
+        undefined,
+        (err, photo)=>{
+            if (err){
+                response.status(400).send(JSON.stringify(err));
+            }
+            else if (!photo){
+                response.status(400).send("photo doesn't exist");
+            }
+            else {
+                response.status(204).send("deleted");
+            }
+        }
+    )
+
+})
+
 
 app.post("/commentsOfPhoto/:photo_id", function (request, response) {
     if (hasNoUserSession(request, response)) return;
