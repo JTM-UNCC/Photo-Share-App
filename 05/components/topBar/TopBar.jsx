@@ -101,9 +101,9 @@ class TopBar extends React.Component {
                                     />
                                 </Button>
                                 <Divider orientation="vertical" flexItem/>
-                                <Link to={"/activityFeed/"}>
-                                    <button>Activity Feed</button>
-                                </Link>
+                                <Button variant="contained" component="a" href={"/activityFeed/"}>
+                                    Activity Feed
+                                </Button>
                             </>
                     }
                 </Toolbar>
