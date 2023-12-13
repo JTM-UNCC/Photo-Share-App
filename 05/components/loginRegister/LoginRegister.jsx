@@ -152,7 +152,7 @@ class LoginRegister extends React.Component {
                             aria-controls="panel1a-content"
                             id="panel1a-header"
                         >
-                            <Typography>User Registration</Typography>
+                            <Typography style = {{fontFamily:'Georgia'}}>User Registration</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Box>
@@ -181,7 +181,7 @@ class LoginRegister extends React.Component {
                                                margin="normal" onChange={this.handleChange}/>
                                 </div>
                                 <div>
-                                    <Button style={{background: '#64CCC5', color: '#04364A'}} variant="contained" onClick={event => this.handleRegister(event)}>
+                                    <Button style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}} variant="contained" onClick={event => this.handleRegister(event)}>
                                         Register Me
                                     </Button>
                                 </div>
