@@ -17,7 +17,6 @@ import LoginRegister from "./components/loginRegister/LoginRegister";
 import {Redirect, withRouter} from "react-router";
 import axios from "axios";
 import PrivateRoute from "./components/privateRoute/privateRoute";
-import ActivityFeed from './components/activityFeed/ActivityFeed';
 
 class PhotoShare extends React.Component {
     constructor(props) {
