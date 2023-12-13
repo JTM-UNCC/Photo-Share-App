@@ -1,4 +1,10 @@
-// Code used and inspired from user 'samjkwong'
+/* Source:
+/  Author: Kwong, S.
+/  Accessed: 12/12/2023, 6:23 PM
+/  Code: 'activityFeed.jsx'
+/  Link to Author: https://github.com/samjkwong
+*/
+
 import React from 'react';
 import axios from 'axios';
 import './activityFeed.css';
