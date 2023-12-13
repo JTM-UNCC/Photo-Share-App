@@ -43,10 +43,10 @@ class ActivityFeed extends React.Component {
   render() {
     console.log('activityFeed render');
     console.log(this.state.activities);
-    var initActivities = [];
+    var initiate = [];
     for (var activity of this.state.activities) {
       if (activity.type === 'photo') {
-        initActivities.push(
+        initiate.push(
           <li className='collection-item' key={activity.date_time}>
             <Link smooth to={'/photos/'+activity.photo_owner_id+'#'+activity.file_name}>
               <img className='project-activity-thumbnail' src={'../../images/'+activity.file_name} />
@@ -54,7 +54,7 @@ class ActivityFeed extends React.Component {
             User <b>{activity.login_name}</b> uploaded a new photo at <b>{activity.date_time}</b>
           </li>);
       } else if (activity.type === 'comment') {
-        initActivities.push(
+        initiate.push(
           <li className='collection-item' key={activity.date_time}>
             <Link smooth to={'/photos/'+activity.photo_owner_id+'#'+activity.file_name}>
               <img className='project-activity-thumbnail' src={'../../images/'+activity.file_name} />
@@ -63,17 +63,17 @@ class ActivityFeed extends React.Component {
             <div><i>"{activity.comment}"</i></div>
           </li>);
       } else if (activity.type === 'registration') {
-        initActivities.push(
+        initiate.push(
           <li className='collection-item' key={activity.date_time}>
             User <b>{activity.login_name}</b> registered at <b>{activity.date_time}</b>
           </li>);
       } else if (activity.type === 'login') {
-        initActivities.push(
+        initiate.push(
           <li className='collection-item' key={activity.date_time}>
             User <b>{activity.login_name}</b> logged in at <b>{activity.date_time}</b>
           </li>);
       } else {
-        initActivities.push(
+        initiate.push(
           <li className='collection-item' key={activity.date_time}>
             User <b>{activity.login_name}</b> logged out at <b>{activity.date_time}</b>
           </li>);
@@ -83,7 +83,7 @@ class ActivityFeed extends React.Component {
     return (
       <ul className='collection'>
         <button onClick={this.handleRefresh}>Refresh</button>
-        {initActivities}
+        {initiate}
       </ul>
     );
   }
