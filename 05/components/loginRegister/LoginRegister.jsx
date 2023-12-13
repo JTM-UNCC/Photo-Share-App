@@ -134,15 +134,15 @@ class LoginRegister extends React.Component {
                     {this.state.showRegistrationError && <Alert severity="error">Registration Failed</Alert>}
                     {this.state.showRegistrationSuccess && <Alert severity="success">Registration Succeeded</Alert>}
                     <div>
-                        <TextField id="login_name" label="Login Name" variant="outlined"  fullWidth
+                        <TextField style = {{fontFamily:'Georgia'}} id="login_name" label="Login Name" variant="outlined"  fullWidth
                                    margin="normal" required={true} onChange={this.handleChange}/>
                     </div>
                     <div>
-                        <TextField id="password" label="Password" variant="outlined"  fullWidth
+                        <TextField style = {{fontFamily:'Georgia'}} id="password" label="Password" variant="outlined"  fullWidth
                                    margin="normal" type="password" required={true} onChange={this.handleChange}/>
                     </div>
                     <Box mb={2}>
-                        <Button style={{background: '#64CCC5', color: '#04364A'}} type="submit" variant="contained" onClick={event => this.handleLogin(event)}>
+                        <Button style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}} type="submit" variant="contained" onClick={event => this.handleLogin(event)}>
                             Login
                         </Button>
                     </Box>
