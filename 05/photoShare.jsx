@@ -69,6 +69,8 @@ class PhotoShare extends React.Component {
 
     render() {
 
+
+
         return (
 
 
@@ -108,7 +110,11 @@ class PhotoShare extends React.Component {
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
                                     />
-                                    <Route path='/activity' component={ActivityFeed} />
+                                    <PrivateRoute path="/activityFeed" 
+                                        changeMainContent={this.changeMainContent}
+                                        auth={this.userIsLoggedIn}
+                                        RoutedComponent={ActivityFeed}
+                                    />
                                     <PrivateRoute path="/" auth={this.userIsLoggedIn}/>
                                 </Switch>
                             </Paper>

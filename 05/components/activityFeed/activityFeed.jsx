@@ -1,98 +1,63 @@
-/* Source:
-/  Author: Kwong, S.
-/  Accessed: 12/12/2023, 6:23 PM
-/  Code: 'activityFeed.jsx'
-/  Link to Author: https://github.com/samjkwong
+/* CITATION:
+/  Author: @nick-bash
+/  Accessed: 12/12/2023 10:08 PM
+/  Link: https://github.com/nick-bash/cs142-proj8/blob/7cc66d581265cf362be9208238d00f33bd8af106/components/activityFeed/activityFeed.jsx
 */
 
 import React from 'react';
-import axios from 'axios';
+import { Typography, Divider} from '@material-ui/core';
 import './activityFeed.css';
-import { HashLink as Link } from 'react-router-hash-link';
+import axios from 'axios';
 
 class ActivityFeed extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      activities: []
-    };
-
-    this.handleRefresh = this.handleRefresh.bind(this);
-  }
-
-  handleRefresh(event) {
-    event.preventDefault();
-    axios.get('/activityFeed')
-      .then((resData) => {
-        this.setState({
-          activities: resData.data
-        });
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-      });
-  }
-  
-  componentDidMount() {
-    axios.get('/activityFeed')
-      .then((resData) => {
-        this.setState({
-          activities: resData.data
-        });
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-      });
+    this.state = {activities: undefined};
+    this.refreshButton = this.refreshButton.bind(this);
   }
 
   render() {
-    console.log('activityFeed render');
-    console.log(this.state.activities);
-    var initiate = [];
-    for (var activity of this.state.activities) {
-      if (activity.type === 'photo') {
-        initiate.push(
-          <li className='collection-item' key={activity.date_time}>
-            <Link smooth to={'/photos/'+activity.photo_owner_id+'#'+activity.file_name}>
-              <img className='project-activity-thumbnail' src={'../../images/'+activity.file_name} />
-            </Link>
-            User <b>{activity.login_name}</b> uploaded a new photo at <b>{activity.date_time}</b>
-          </li>);
-      } else if (activity.type === 'comment') {
-        initiate.push(
-          <li className='collection-item' key={activity.date_time}>
-            <Link smooth to={'/photos/'+activity.photo_owner_id+'#'+activity.file_name}>
-              <img className='project-activity-thumbnail' src={'../../images/'+activity.file_name} />
-            </Link>
-            User <b>{activity.login_name}</b> commented on user <b>{activity.photo_owner}</b>'s photo at <b>{activity.date_time}</b>
-            <div><i>"{activity.comment}"</i></div>
-          </li>);
-      } else if (activity.type === 'registration') {
-        initiate.push(
-          <li className='collection-item' key={activity.date_time}>
-            User <b>{activity.login_name}</b> registered at <b>{activity.date_time}</b>
-          </li>);
-      } else if (activity.type === 'login') {
-        initiate.push(
-          <li className='collection-item' key={activity.date_time}>
-            User <b>{activity.login_name}</b> logged in at <b>{activity.date_time}</b>
-          </li>);
-      } else {
-        initiate.push(
-          <li className='collection-item' key={activity.date_time}>
-            User <b>{activity.login_name}</b> logged out at <b>{activity.date_time}</b>
-          </li>);
-      }
+    if(this.props.loggedInUser === undefined || this.state.activities === undefined) return (<></>);
 
-    }
     return (
-      <ul className='collection'>
-        <button style={{background: '#64CCC5', color: '#04364A'}} onClick={this.handleRefresh}>Refresh</button>
-        {initiate}
-      </ul>
+        <div>
+          {this.state.activities.map(activity => {
+            return (
+                <div className="Group4" key={activity._id}>
+                  <Typography className="Group4-item">{(new Date(activity.date_time)).toISOString()}</Typography>
+                  <Typography className="Group4-item">{activity.activity}</Typography>
+                  {
+                    activity.photo_file_name === null ?
+                        <></> :
+                        <img className="Group4-image" src={`../../images/${activity.photo_file_name}`}/>
+                  }
+                  <Divider/>
+                </div>
+            );
+          })}
+          <button style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}} onClick={this.refreshButton}>Refresh</button>
+        </div>
     );
   }
+
+  refreshButton() {
+    this.fetchModel();
+  }
+
+  fetchModel() {
+    var x = axios.get("/activities");
+    x.then(response => {
+      this.setState({activities: response.data});
+      this.props.updateCurrentView("Activity feed");
+    })
+        .catch(err => console.error(err));
+  }
+
+  componentDidMount() {
+    this.fetchModel();
+  }
+
+  componentDidUpdate() { }
 }
 
 export default ActivityFeed;

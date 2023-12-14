@@ -108,6 +108,10 @@ class TopBar extends React.Component {
                                         onChange={this.handleNewPhoto}
                                     />
                                 </Button>
+                                <Divider orientation="vertical" flexItem/>
+                                <Button style={{background:'#64CCC5', color: '#04364A', fontFamily:'Georgia'}} variant="contained" component="a" href={"/activityFeed"}>
+                                    Activity Feed
+                                </Button>
                             </>
                     }
                 </Toolbar>
