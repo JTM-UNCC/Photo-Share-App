@@ -505,7 +505,7 @@ app.delete("/user/:user_id", function (request, response) {
 })
 
 
-app.post("/commentsOfPhoto/:photo_id", function (request, response) {
+app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
     if (hasNoUserSession(request, response)) return;
     const mentionNum = request.body.mentions;
 
@@ -532,14 +532,15 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
         console.info("checking mentions");
         console.info(mentions);
         let temp = [];
+        let queries = [];
         for (let mention of mentions){
-            User.findOne({ "_id": mention }, "_id")
+            queries.push(User.findOne({ "_id": mention }, "_id")
                 .then(user => {
                     if (user) temp.push(user);
-                    console.warn("user found: " + user + temp);
-                }).catch(error => console.log(error));
+                    console.warn("user found: " + user);
+                }).catch(error => console.log(error)));
         }
-        mentions = temp;
+        await Promise.allSettled(queries).then(() => mentions = temp);
         console.log("mentions:" + mentions);
     }
     console.log("Mentions, right before update:" + mentions);
@@ -552,7 +553,7 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
                     "date_time": new Date(),
                     "user_id": new mongoose.Types.ObjectId(user_id),
                     "_id": new mongoose.Types.ObjectId(),
-                    "mention_ids": mentions || []
+                    "mentioned_users": mentions || []
                 }
             }
         }
@@ -573,38 +574,30 @@ app.get("/mentions/user/:userId", function(request, response){
 
     let user_id = request.params.userId;
 
-    Photo.find({}, "file_name user_id comments")
-        .populate("comments","mention_ids date_time", undefined, { "mention_ids": user_id})
-        .then(photos => {
-            let newPhotos = photos.filter(photo => {
-                let bool = false;
-                photo.comments?.map(comment => {
-
-                    if (comment.mention_ids.includes(user_id)) {
-                        bool = true;
-
-                    }
-
-                });
-
-                return bool;
-                });
-            // photos.map(photo => console.info(photo.comments));
-
-            if (newPhotos.length > 0) {
-                // newPhotos = newPhotos.map(newPhoto => {
-                //     newPhoto.user = User
-                //         .findOne({ "_id": user_id }, "first_name last_name _id");
-                //     console.log("newPhoto user: " + newPhoto.user);
-                // });
-
-
+    Photo.find({ "comments.mentioned_users": user_id }, "file_name user_id comments date_time")
+        .sort("-date_time")
+        .then(async photos =>{
+            if (!photos || photos.length === 0){
+                response.status(404).send("no mentions found");
+                return;
             }
-            newPhotos.map(val => console.log(val + ": value before send"));
-            response.status(200).send(JSON.stringify(newPhotos));
-            }).catch(error => {
-                response.status(400).send(JSON.stringify(error));
-    });
+            let queries = [];
+            let finalPhotos = [];
+            photos.map(photo => {
+                queries.push(User.findOne({ "_id": photo.user_id }, "first_name last_name _id")
+                    .then(user => {
+                        photo = photo.toObject();
+                        photo.user = user;
+                        finalPhotos.push(photo);
+                    }).catch(err => console.log(err)));
+            });
+            await Promise.allSettled(queries).then(() => {
+                console.log(finalPhotos);
+                response.status(200).send(JSON.stringify(finalPhotos));
+            });
+
+        });
+
 });
 
 app.get("/photosOfUser/:userId/previews", function(request, response){
