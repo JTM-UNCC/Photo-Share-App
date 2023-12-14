@@ -161,7 +161,7 @@ class UserDetail extends React.Component {
                                 <img
                                     src={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                     srcSet={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                    sizes={"(max-width: 8vh)"}
+                                    sizes={"(max-width: 8vh) and (min-width: 8vh)"}
                                     alt={this.state.maxCommentPhoto.file_name}
                                     width="8vh"
                                     loading="lazy"
@@ -183,10 +183,10 @@ class UserDetail extends React.Component {
                                     <img
                                         src={`images/${photo.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                         srcSet={`images/${photo.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                        sizes={"(max-width: 8vh)"}
+                                        sizes={"(max-width: 8vh) and (min-width: 8vh)"}
                                         alt={photo.file_name}
-                                        width="8vh"
                                         loading="lazy"
+                                        width="8vh"
                                     />
                                     </a>
 
