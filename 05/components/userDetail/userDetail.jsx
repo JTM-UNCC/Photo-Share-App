@@ -15,9 +15,7 @@ class UserDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined,
-            recentPhoto: undefined,
-            mostCommentedPhoto: undefined,
+            user: undefined
         };
     }
     componentDidMount() {
@@ -27,7 +25,7 @@ class UserDetail extends React.Component {
     }
 
     componentDidUpdate() {
-
+        console.info("componentDidUpdate in userDetails");
         const new_user_id = this.props.match.params.userId;
         const current_user_id = this.state.user?._id;
         if (current_user_id  !== new_user_id){
@@ -36,10 +34,12 @@ class UserDetail extends React.Component {
         }
     }
 
-    /* handleUserChange(user_id) {
+    handleUserChange(user_id){
         //console.info(`handleUserChange called with user_id: ${user_id} in userDetail`);
         axios.get("/user/" + user_id)
-            .then((response) => {
+            /* fetchModel("/user/" + user_id) */
+            .then((response) =>
+            {
                 const new_user = response.data;
                 this.setState({
                     user: new_user
@@ -48,57 +48,23 @@ class UserDetail extends React.Component {
                 this.props.changeMainContent(main_content);
             });
     }
-    */
 
-    handleUserChange(user_id) {
-        axios.get("/user/" + user_id)
+    handleDeleteAccount(user_id) {
+        console.log("lalala");
+        axios.delete("/user/" + user_id)
             .then((response) => {
-                const new_user = response.data;
-                this.setState({
-                    user: new_user
-                });
-                const main_content = "User Details for " + new_user.first_name + " " + new_user.last_name;
-                this.props.changeMainContent(main_content);
-
-                // To fetch most recently uploaded photo
-                axios.get(`/photosOfUser/${user_id}`)
-                    .then((photoResponse) => {
-                        const photos = photoResponse.data;
-                        const recentPhoto = photos.length > 0 ? photos[0] : null;
-                        this.setState({
-                            recentPhoto: recentPhoto,
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching recent photo:", error);
-                    });
-
-                // To fetch photo with the most comments
-                axios.get(`/photosOfUser/${user_id}`)
-                    .then((photoResponse) => {
-                        const photos = photoResponse.data;
-                        const mostCommentedPhoto = photos.reduce((max, photo) =>
-                                photo.comments.length > max.comments.length ? photo : max
-                            , photos[0]);
-                        this.setState({
-                            mostCommentedPhoto: mostCommentedPhoto,
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching most commented photo:", error);
-                    });
+                console.log("deleter", response.data);
+        // figure out how to log out
+                let newUser = this.state.user.filter(user => user._id !== user_id);
+                this.setState({ user: newUser });
             })
-            .catch((error) => {
-                console.error("Error fetching user details:", error);
+            .catch( error => {
+                console.log(`error in handleSubmit: ${error}`);
             });
+
     }
-
-
-
-
-
-
     render() {
+
         return this.state.user ? (
             <div>
                 <Box component="form" noValidate autoComplete="off">
@@ -132,40 +98,22 @@ class UserDetail extends React.Component {
                                    margin="normal"
                                    value={this.state.user.occupation}/>
                     </div>
+                    {this.props.currUser._id === this.state.user._id && (
+                        <Button
+                            user_id={this.props.currUser._id}
+                            variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
+                            style={{"margin": "20px 0", "backgroundColor": "#bf0300"}}
+                        >
+                            Delete Account
+                        </Button>
+                    )}
                 </Box>
-                <div>
-                    <h2>Recent Photo</h2>
-                    {this.state.recentPhoto && (
-                        <div>
-                            <img
-                                src={`images/${this.state.recentPhoto.file_name}`}
-                                alt={this.state.recentPhoto.file_name}
-                                width="100"
-                            />
-                            <p>Date Uploaded: {this.state.recentPhoto.date_time}</p>
-                        </div>
-                    )}
-                </div>
-
-                <div>
-                    <h2>Most Commented Photo</h2>
-                    {this.state.mostCommentedPhoto && this.state.mostCommentedPhoto.comments.length > 0 &&(
-                        <div>
-                            <img
-                                src={`images/${this.state.mostCommentedPhoto.file_name}`}
-                                alt={this.state.mostCommentedPhoto.file_name}
-                                width="100"
-                            />
-                            <p>Comments Count: {this.state.mostCommentedPhoto.comments.length}</p>
-                        </div>
-                    )}
-
-                </div>
             </div>
         ) : (
             <div/>
         );
     }
+
 }
 
 export default UserDetail;
