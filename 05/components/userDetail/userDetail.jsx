@@ -13,7 +13,10 @@ class UserDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: undefined, recentPhoto: undefined, maxCommentPhoto: undefined
+            user: undefined,
+            recentPhoto: undefined,
+            maxCommentPhoto: undefined,
+            userMentionPhotos: undefined
         };
     }
 
@@ -33,21 +36,6 @@ class UserDetail extends React.Component {
         }
     }
 
-    // handleUserChange(user_id){
-    //     //console.info(`handleUserChange called with user_id: ${user_id} in userDetail`);
-    //     axios.get("/user/" + user_id)
-    //         /* fetchModel("/user/" + user_id) */
-    //         .then((response) =>
-    //         {
-    //             const new_user = response.data;
-    //             this.setState({
-    //                 user: new_user
-    //             });
-    //             const main_content = "User Details for " + new_user.first_name + " " + new_user.last_name;
-    //             this.props.changeMainContent(main_content);
-    //         });
-    // }
-
     handleUserChange(user_id) {
         axios.get("/user/" + user_id)
             .then((response) => {
@@ -64,12 +52,23 @@ class UserDetail extends React.Component {
                         const { recent, mostComments } = photoResponse.data;
 
                         this.setState({
-                            recentPhoto: recent, maxCommentPhoto: mostComments
+                            recentPhoto: recent,
+                            maxCommentPhoto: mostComments
                         });
                     })
                     .catch((error) => {
                         console.error("Error fetching recent photo:", error);
                     });
+
+                axios.get(`/mentions/user/${user_id}`)
+                    .then(response => {
+                            let mentions = response.data;
+                            if (!Array.isArray(mentions)){
+                                mentions = [mentions];
+                            }
+                            this.setState({ userMentionPhotos: mentions });
+                        }).catch(error => console.log("no mentions"));
+
             })
             .catch((error) => {
                 console.error("Error fetching user details:", error);
@@ -97,7 +96,7 @@ class UserDetail extends React.Component {
                     <Box component="form" noValidate autoComplete="off"
                     >
                         <div>
-                            <Button variant="contained" component="a" href={"#/photos/" + this.state.user._id}>
+                            <Button style={{background: '#64CCC5', color: '#222831'}} variant="contained" component="a" href={"#/photos/" + this.state.user._id}>
                                 User Photos
                             </Button>
                         </div>
@@ -127,53 +126,80 @@ class UserDetail extends React.Component {
                                        value={this.state.user.occupation}/>
                         </div>
                         {this.props.currUser._id === this.state.user._id && (<Button
-                            style={{background: '#64CCC5', color: '#222831'}}
                             user_id={this.props.currUser._id}
                             variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
-                            style={{ "margin": "20px 0", "backgroundColor": "#bf0300" }}
+                            style={{margin: "20px 0", background: '#64CCC5', color: '#222831'}}
                         >
                             Delete Account
                         </Button>)}
 
-                        <ImageList cols={2} rowHeight={300}>
+                        <ImageList cols={2} variant="masonry" rowHeight={300}>
                             {this.state.recentPhoto && (
-                                <ImageListItem>
-                                    <img
-                                        src={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                        srcSet={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                        sizes={"(max-width: 8vh)"}
-                                        alt={this.state.recentPhoto.file_name}
-                                        width="8vh"
-                                        loading="lazy"
-                                    />
-                                    <ImageListItemBar
-                                        title={`Recent photo from ${this.state.user.first_name}`}
-                                        subtitle={<span>upload date: {this.state.recentPhoto.date_time}</span>}
-                                        position="below"
-                                    />
-                                </ImageListItem>
+                                <a href={`#/photos/${this.state.user._id}`}>
+                                    <ImageListItem>
+                                        <img
+                                            src={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                            srcSet={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
+                                            sizes={"(max-width: 8vh)"}
+                                            alt={this.state.recentPhoto.file_name}
+                                            width="8vh"
+                                            loading="lazy"
+                                        />
+                                        <ImageListItemBar
+                                            title={`Recent photo from ${this.state.user.first_name}`}
+                                            subtitle={<span>upload date: {this.state.recentPhoto.date_time}</span>}
+
+                                        />
+                                    </ImageListItem>
+                                </a>
                             )}
 
 
                             {this.state.maxCommentPhoto && this.state.maxCommentPhoto.comments.length > 0 && (
-                                <ImageListItem>
-                                    <img
-                                        src={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                        srcSet={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                        sizes={"(max-width: 8vh)"}
-                                        alt={this.state.maxCommentPhoto.file_name}
-                                        width="8vh"
-                                        loading="lazy"
-                                    />
+                                <a href={`#/photos/${this.state.user._id}`}>
+                                    <ImageListItem>
+                                        <img
+                                            src={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                            srcSet={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
+                                            sizes={"(max-width: 8vh)"}
+                                            alt={this.state.maxCommentPhoto.file_name}
+                                            width="8vh"
+                                            loading="lazy"
+                                        />
 
-                                    <ImageListItemBar
-                                        title={`Most commented photo from ${this.state.user.first_name}`}
-                                        subtitle={<span>{this.state.maxCommentPhoto.comments.length} comments</span>}
-                                        position="below"
-                                    />
-                                </ImageListItem>
+                                        <ImageListItemBar
+                                            title={`Most commented photo from ${this.state.user.first_name}`}
+                                            subtitle={<span>{this.state.maxCommentPhoto.comments.length} comments</span>}
+
+                                        />
+                                    </ImageListItem>
+                                </a>
                             )}
+                            {this.state.userMentionPhotos && this.state.userMentionPhotos.map(photo => (
+                                <div key={photo._id}>
 
+                                    <ImageListItem>
+                                        <a href={`#/photos/${photo.user_id}`}>
+                                            <img
+                                                src={`images/${photo.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                                srcSet={`images/${photo.file_name}?w=164&h=164&fit=crop&auto=format`}
+                                                sizes={"(max-width: 8vh)"}
+                                                alt={photo.file_name}
+                                                width="8vh"
+                                                loading="lazy"
+                                            />
+                                        </a>
+
+                                        <ImageListItemBar
+                                            title={`Mentioned in photo: `}
+                                            subtitle={<a href={`#/users/${photo.user_id}`}>{`Posted by ${photo.user.first_name + photo.user.last_name}`}</a>}
+
+                                        />
+                                    </ImageListItem>
+                                </div>)
+
+                            )
+                            }
 
                         </ImageList>
                     </Box>

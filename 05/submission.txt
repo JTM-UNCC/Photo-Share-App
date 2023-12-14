@@ -8,6 +8,9 @@ like to be graded on. For each story include the following information:
 Story number and name: 1) Extend user profile detail with usage
 Story points: 3
 Brief description to see the story in action:
+Viewing user details shows the photo with the most comments and the photo most recently uploaded.
+That story has a third part where clicking on each picture takes you to the photo with all its comments
+
 
 Story number and name: 2) @mentions in comments
 Story points: 6
