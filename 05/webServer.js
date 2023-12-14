@@ -605,7 +605,7 @@ app.get("/photosOfUser/:userId/previews", function(request, response){
 
     const user_id = request.params.userId || "";
     Photo.find({ "user_id": user_id })
-        .sort("date")
+        .sort("-date_time")
         .then(photos => {
             if (!photos || photos.length === 0){
                 response.status(404).send("No photos");
