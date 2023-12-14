@@ -1,17 +1,8 @@
-# Scrum Team
-
-## Product Owner
-- JT Madden
-
-## Scrum Master
-- Zahra Masroor
-
-## Developers
-- Matt Calvello
-- Shreeya Karnam
-- Veena Karnati
-
 # Team 4 Photoshare App
+This app allows users to connect with other users through photo posting and commenting. 
+
+## Table of Content
+- 
 
 ## How to develop locally
 ### Tools needed
@@ -21,12 +12,12 @@
 ### Installation
 ```
 npm install
-npm run build:w
 node loadDatabase.js
+npm run build
 nodemon
 ```
 
-## Features of the App
+## Pages & Features
 ### Login/Register page - ```/login-register```
 - Register
   - When entering the app, you are prompted a registration page. Registration is required to access the app.
@@ -70,9 +61,18 @@ nodemon
   - When you create a comment, you can @ existing users. After posting the comment, the thumbnail of photo will appear in that user's detail.
 ### Activity Feed Page - ```/activityFeed```
 - View app's 5 most recent activity
-  - 
+  - Locate the "Activity Feed" button on the top bar. After clicking it, you will be rerouted to a new page. It will show you the 5 most recent activities with:
+    - Time of activity
+    - User that performed activity
+    - Activity type
+    - User registering
+    - User logging in 
+    - User logging out
+- Refresh feed
+  - Click on the button "Refresh feed" to get the latest updates. 
 ### Other features
 - Logout
+  - Navigate to the top bar to see the "Logout" button. It will log you out.
 
 ## Technologies used
 - Node.js - Running server 
@@ -81,6 +81,20 @@ nodemon
 - React 
 - Material-UI 
 - HTML/CSS/JavaScript
+
+# Scrum Team
+
+## Product Owner
+- JT Madden
+
+## Scrum Master
+- Zahra Masroor
+
+## Developers
+- Matt Calvello
+- Shreeya Karnam
+- Veena Karnati
+
 
 
 
