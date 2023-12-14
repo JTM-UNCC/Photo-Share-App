@@ -3,7 +3,7 @@ This app allows users to connect with other users through photo posting and comm
 
 ## Table of Content
 - [How to Develop Locally](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#how-to-develop-locally)
-  - []()
+  - [Technologies Used](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#technologies-used)
   - [Installation](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#installation)
 - [Pages & Features](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#pages--features)
   - [Login/Register Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#loginregister-page---login-register)
