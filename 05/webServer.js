@@ -471,6 +471,12 @@ parseMarkup = (commentMarkup) => {
 
     comment = comment.split(")]!@").join("");
 
+    console.info(comment, mentions);
+
+    return { comment: comment, mentions: mentions };
+
+}
+
 app.delete("/user/:user_id", function (request, response) {
 
     if (hasNoUserSession(request)) return;
@@ -527,7 +533,7 @@ app.post("/commentsOfPhoto/:photo_id", function (request, response) {
         console.info(mentions);
         let temp = [];
         for (let mention of mentions){
-            await User.findOne({ "_id": mention }, "_id")
+            User.findOne({ "_id": mention }, "_id")
                 .then(user => {
                     if (user) temp.push(user);
                     console.warn("user found: " + user + temp);
