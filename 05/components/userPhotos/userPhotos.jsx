@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Button, TextField,
-    ImageList, ImageListItem, DialogActions, Dialog, DialogContent, DialogContentText, Typography, DialogTitle
+    ImageList, ImageListItem, DialogActions, Dialog, DialogContent, DialogContentText, Typography, DialogTitle, Paper
 } from '@mui/material';
 import {MentionsInput, Mention} from 'react-mentions';
 import './userPhotos.css';
@@ -220,7 +220,12 @@ class UserPhotos extends React.Component {
                             <div>
                             {item.comments ?
                                 item.comments.map((comment) => (
-                                    <div key={comment._id}>
+                                    <Paper key={comment._id} elevation={3} style={{ marginTop: "8px",
+                                        marginBottom: "8px",
+                                        marginLeft: "3px",
+                                        marginRight: "3px"
+                                    }}>
+                                    <div style={{ marginLeft: "4px", marginRight: "4px"}}>
                                         <TextField label="Comment Date" variant="outlined" disabled fullWidth
                                                    margin="normal" value={comment.date_time} />
                                         <TextField label="User" variant="outlined" disabled fullWidth
@@ -240,30 +245,12 @@ class UserPhotos extends React.Component {
 
 
                                     </div>
+                                    </Paper>
                                 )) : (
                                     <div>
                                         <Typography>No Comments</Typography>
                                     </div>
                                 )}
-                                {item.comments ?
-                                    item.comments.map((comment) => (
-                                        <div key={comment._id}>
-                                            <TextField label="Comment Date" variant="outlined" disabled fullWidth
-                                                       margin="normal" value={comment.date_time}/>
-                                            <TextField label="User" variant="outlined" disabled fullWidth
-                                                       margin="normal"
-                                                       value={comment.user.first_name + " " + comment.user.last_name}
-                                                       component="a" href={"#/users/" + comment.user._id}>
-                                            </TextField>
-                                            <TextField label="Comment" variant="outlined" disabled fullWidth
-                                                       margin="normal" multiline rows={4} value={comment.comment}/>
-                                        </div>
-                                    ))
-                                    : (
-                                        <div>
-                                            <Typography>No Comments</Typography>
-                                        </div>
-                                    )}
                                 <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
                                     Add Comment
                                 </Button>
