@@ -2,23 +2,38 @@
 This app allows users to connect with other users through photo posting and commenting. 
 
 ## Table of Content
-- 
+- [How to Develop Locally](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#how-to-develop-locally)
+  - []()
+  - [Installation](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#installation)
+- [Pages & Features](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#pages--features)
+  - [Login/Register Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#loginregister-page---login-register)
+  - [User Detail Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#user-detail-page---usersuserid)
+  - [User Photo Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#user-photo-page---photosuserid)
+  - [Activity Feed Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#activity-feed-page---activityfeed)
+  - [Other Features](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#other-features)
+- [Scrum Team](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#scrum-team)
+  - [Product Owner](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#product-owner)
+  - [Scrum Master](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#scrum-master)
+  - [Developers](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#developers)
 
-## How to develop locally
-### Tools needed
-- Node.js
-- MongoDB
+## How to Develop Locally
+### Technologies Used
+- Node.js - Running server
+- Mongoose - Schemas for MongoDB
+- MongoDB - Database for user info
+- React
+- Material-UI
+- HTML/CSS/JavaScript
 
 ### Installation
+To install the necessary packages and load the data, run these commands in terminal or command line.
 ```
 npm install
 node loadDatabase.js
-npm run build
-nodemon
 ```
 
 ## Pages & Features
-### Login/Register page - ```/login-register```
+### Login/Register Page - ```/login-register```
 - Register
   - When entering the app, you are prompted a registration page. Registration is required to access the app.
   - Credentials required: login name, password, first name, last name
@@ -70,17 +85,9 @@ nodemon
     - User logging out
 - Refresh feed
   - Click on the button "Refresh feed" to get the latest updates. 
-### Other features
+### Other Features
 - Logout
   - Navigate to the top bar to see the "Logout" button. It will log you out.
-
-## Technologies used
-- Node.js - Running server 
-- Mongoose - Schemas for MongoDB 
-- MongoDB - Database for user info 
-- React 
-- Material-UI 
-- HTML/CSS/JavaScript
 
 # Scrum Team
 
