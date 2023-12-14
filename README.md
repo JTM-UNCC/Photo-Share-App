@@ -49,8 +49,8 @@ node loadDatabase.js
     - Description
     - Occupation
     - Most recent photo with date
-    - Photo with most comments
-    - Photos they've been mentioned in
+    - Photo with most comments --> click on it to take you to the post.
+    - Photos they've been mentioned in --> click on it to take you to the post.
 - Delete your own user
   - To delete your account, locate your name in the user lists. This will take you to your user detail page. At the bottom of the page is a delete button. It will delete your user account.
 ### User Photo Page - ```/photos/:userId```
