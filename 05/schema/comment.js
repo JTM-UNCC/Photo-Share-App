@@ -10,6 +10,8 @@ const commentSchema = new mongoose.Schema({
     date_time: { type: Date, default: Date.now },
     // The ID of the user who created the comment.
     user_id: mongoose.Schema.Types.ObjectId,
+
+    mentioned_users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
 });
 
 module.exports = commentSchema;
