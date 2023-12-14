@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 /**
  * Define the Mongoose Schema for a Comment.
  */
+
 // const commentSchema = new mongoose.Schema({
 //   // The text of the comment.
 //   comment: String,
@@ -15,6 +16,7 @@ const mongoose = require("mongoose");
 // });
 
 const commentSchema = require("./comment.js");
+
 
 /**
  * Define the Mongoose Schema for a Photo.
