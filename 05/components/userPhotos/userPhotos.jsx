@@ -94,7 +94,6 @@ class UserPhotos extends React.Component {
             mentionCount: 0
         });
     }
-
     getMentionOptions = () => {
 
         axios.get(`/mentions/users/list`,
@@ -142,16 +141,49 @@ class UserPhotos extends React.Component {
                 console.log(`error in handleSubmit: ${error}`);
             });
     }
+
+
+    handleDeleteComment = (photo_id, comment_id) => {
+        axios.delete("/comment/" + photo_id+"/"+comment_id)
+            .then((response) => {
+                console.log("deleter", response.data);
+                axios.get("/photosOfUser/" + this.state.user_id)
+                    .then((response) =>
+                    {
+                        this.setState({ photos: this.state.photos.filter( pic => pic._id !== photo_id)});
+                    });
+                    })
+
+                .catch( error => {
+                    console.log(`error in handleSubmit: ${error}`);
+                });
+
+    }
+
+    handleDeletePhoto = (user_id, photo_id) => {
+      axios.delete("/photo/" + user_id + "/" + photo_id)
+            .then((response) => {
+                console.log("deleter", response.data);
+                let newPhotos = this.state.photos.filter(pic => pic._id !== photo_id);
+                this.setState({ photos: newPhotos });
+            })
+          .catch( error => {
+              console.log(`error in handleSubmit: ${error}`);
+          });
+
+    }
+
     addMention = () => {
         this.state.mentionCount++;
     }
 
 
 
-    render() {
+
+
+    render(){
         const setState = this.setState;
         const users = this.state.userList;
-
 
 
         return this.state.user_id ? (
@@ -173,8 +205,46 @@ class UserPhotos extends React.Component {
                                     alt={item.file_name}
                                     loading="lazy"
                                 />
+
+                            <div>
+                                {this.props.currUser._id === this.state.user_id && (
+                                    <Button
+                                        photo_id={item._id} variant="contained" onClick={() => this.handleDeletePhoto(this.state.user_id, item._id)}
+                                            style={{"margin": "20px 0"}}
+                                    >
+                                        Delete Photo
+                                    </Button>
+                                )}
+                            </div>
                             </ImageListItem>
                             <div>
+                            {item.comments ?
+                                item.comments.map((comment) => (
+                                    <div key={comment._id}>
+                                        <TextField label="Comment Date" variant="outlined" disabled fullWidth
+                                                   margin="normal" value={comment.date_time} />
+                                        <TextField label="User" variant="outlined" disabled fullWidth
+                                                   margin="normal"
+                                                   value={comment.user.first_name + " " + comment.user.last_name}
+                                                   component="a" href={"#/users/" + comment.user._id}>
+                                        </TextField>
+                                        <TextField label="Comment" variant="outlined" disabled fullWidth
+                                                   margin="normal" multiline rows={4} value={comment.comment} />
+                                        {this.props.currUser._id === comment.user._id && (
+                                            <Button comment_id={comment._id} variant="contained" onClick={() => this.handleDeleteComment(item._id, comment._id)}
+                                            style={{"margin": "20px 0"}}
+                                            >
+                                                Delete Comment
+                                            </Button>
+                                        )}
+
+
+                                    </div>
+                                )) : (
+                                    <div>
+                                        <Typography>No Comments</Typography>
+                                    </div>
+                                )}
                                 {item.comments ?
                                     item.comments.map((comment) => (
                                         <div key={comment._id}>
@@ -197,6 +267,7 @@ class UserPhotos extends React.Component {
                                 <Button photo_id={item._id} variant="contained" onClick={this.handleShowAddComment}>
                                     Add Comment
                                 </Button>
+
                             </div>
                         </div>
                     )) : (

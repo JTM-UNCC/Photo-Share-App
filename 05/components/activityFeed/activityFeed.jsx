@@ -35,7 +35,9 @@ class ActivityFeed extends React.Component {
                 </div>
             );
           })}
-          <button style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}} onClick={this.refreshButton}>Refresh</button>
+          <button
+              style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}}
+              onClick={this.refreshButton}>Refresh</button>
         </div>
     );
   }
@@ -45,10 +47,10 @@ class ActivityFeed extends React.Component {
   }
 
   fetchModel() {
-    var x = axios.get("/activities");
+    let x = axios.get("/activities");
     x.then(response => {
       this.setState({activities: response.data});
-      this.props.updateCurrentView("Activity feed");
+      this.props.changeMainContent("Activity feed");
     })
         .catch(err => console.error(err));
   }
