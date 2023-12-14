@@ -27,7 +27,7 @@ class PrivateRoute extends React.Component {
         return (
             <Route {...this.props} render={(props) => this.props.auth() ?
                 (RoutedComponent ? <RoutedComponent {...rest} {...props}
-                                                    /> : <div/>) :
+                /> : <div/>) :
                 <Redirect to="/login-register" from={window.location.href}/>}
             />
         );

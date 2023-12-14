@@ -45,13 +45,14 @@ const app = express();
 const User = require("./schema/user.js");
 const Photo = require("./schema/photo.js");
 const SchemaInfo = require("./schema/schemaInfo.js");
+const Activity = require("./schema/activity.js");
 //const Activity = require('./schema/activity.js');
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const processFormBody = multer({storage: multer.memoryStorage()}).single('uploadedphoto');
-
-
+const commentSchema = require("./schema/comment.js");
+const Comment = mongoose.model("Comment", commentSchema);
 app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
 app.use(bodyParser.json());
 // XXX - Your submission should work without this line. Comment out or delete
@@ -170,21 +171,17 @@ app.get("/test/:p1", function (request, response) {
     }
 });
 
-app.get('/activities', function (request, response) {    
+app.get('/activities', function (request, response) {
     console.log("Express/activities | Called");
-    if(request.session.user === undefined) {
-        console.error('Express/activities | 401. No user logged in.');
-        response.status(401).send();
-        return;
-    }
+    if (hasNoUserSession(request, response)) return;
 
-    var query = Activity.find({}).sort("-date_time").limit(5);
+    let query = Activity.find({}).sort("-date_time").limit(5);
     query.exec(function(err, activities) {
         if(err) {
             console.error("Express/activities | Error in Mongo call: " + err);
             response.status(400).send();
             return;
-        } else {            
+        } else {
             console.log('Express/activities | Status 200.');
             response.status(200).send(JSON.stringify(activities));
             return;
@@ -246,6 +243,7 @@ app.get("/user/:id", function (request, response) {
 
 
 });
+// Here - add photo functionality
 
 /**
  * URL /photos/new - adds a new photo for the current user
@@ -393,6 +391,67 @@ checkIfHex = (string) => {
     return re.test(string);
 }
 
+
+
+// here - delete comment functionality
+
+app.delete("/comment/:photo_id/:comment_id", function (request, response) {
+
+    if (hasNoUserSession(request, response)) return;
+    const photo_id = request.params.photo_id || "";
+    const comment_id = request.params.comment_id || "";
+    if (photo_id === "" || comment_id === "") {
+        response.status(400).send("ids required");
+        return;
+    }
+
+    Photo.findOneAndUpdate(
+        {_id: photo_id},
+        {$pull: {comments: {_id: comment_id}}},
+        {new: true},
+        (err, photo)=>{
+            if (err){
+                response.status(400).send("error");
+            }
+            else if (!photo){
+                response.status(400).send("photo doesn't exist");
+            }
+            else {
+                response.status(204).send("deleted");
+            }
+        }
+    )
+
+});
+
+app.delete("/photo/:user_id/:photo_id", function (request, response) {
+
+    if (hasNoUserSession(request, response)) return;
+    const photo_id = request.params.photo_id || "";
+    const user_id = request.params.user_id || "";
+    if (photo_id === "" || user_id === "") {
+        response.status(400).send("ids required");
+        return;
+    }
+
+    Photo.findOneAndDelete(
+        {_id: photo_id},
+        undefined,
+        (err, photo)=>{
+            if (err){
+                response.status(400).send(JSON.stringify(err));
+            }
+            else if (!photo){
+                response.status(400).send("photo doesn't exist");
+            }
+            else {
+                response.status(204).send("deleted");
+            }
+        }
+    )
+
+});
+
 parseMarkup = (commentMarkup) => {
     let comment = commentMarkup;
 
@@ -418,7 +477,35 @@ parseMarkup = (commentMarkup) => {
 
 }
 
-app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
+app.delete("/user/:user_id", function (request, response) {
+
+    if (hasNoUserSession(request)) return;
+    const user_id = request.params.user_id || "";
+    if (user_id === "") {
+        response.status(400).send("ids required");
+        return;
+    }
+
+    User.findOneAndDelete(
+        {_id: user_id},
+        undefined,
+        (err, user)=>{
+            if (err){
+                response.status(400).send(JSON.stringify(err));
+            }
+            else if (!user){
+                response.status(400).send("photo doesn't exist");
+            }
+            else {
+                response.status(204).send("deleted");
+            }
+        }
+    )
+
+})
+
+
+app.post("/commentsOfPhoto/:photo_id", function (request, response) {
     if (hasNoUserSession(request, response)) return;
     const mentionNum = request.body.mentions;
 
@@ -446,7 +533,7 @@ app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
         console.info(mentions);
         let temp = [];
         for (let mention of mentions){
-            await User.findOne({ "_id": mention }, "_id")
+            User.findOne({ "_id": mention }, "_id")
                 .then(user => {
                     if (user) temp.push(user);
                     console.warn("user found: " + user + temp);
