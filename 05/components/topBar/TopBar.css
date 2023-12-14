@@ -1,11 +1,13 @@
 .AppBar {
-  height: 60;
-  justify-content: 'center';
   background-color: #04364A;
 }
 
+.Button:hover{
+  background-color: #EEEEEE;
+}
+
 .Button{
-  color: #176B87
+  color: #00ADB5;
 }
 
 

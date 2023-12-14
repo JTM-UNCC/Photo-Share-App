@@ -142,7 +142,7 @@ class LoginRegister extends React.Component {
                                    margin="normal" type="password" required={true} onChange={this.handleChange}/>
                     </div>
                     <Box mb={2}>
-                        <Button style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}} type="submit" variant="contained" onClick={event => this.handleLogin(event)}>
+                        <Button style={{background: '#64CCC5', color: '#222831',fontFamily:'Georgia'}} type="submit" variant="contained" onClick={event => this.handleLogin(event)}>
                             Login
                         </Button>
                     </Box>
@@ -181,7 +181,9 @@ class LoginRegister extends React.Component {
                                                margin="normal" onChange={this.handleChange}/>
                                 </div>
                                 <div>
-                                    <Button style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}} variant="contained" onClick={event => this.handleRegister(event)}>
+                                    <Button
+                                        className = "Button"
+                                        style={{background: '#64CCC5', color: '#222831',fontFamily:'Georgia'}} variant="contained" onClick={event => this.handleRegister(event)}>
                                         Register Me
                                     </Button>
                                 </div>

@@ -36,7 +36,8 @@ class ActivityFeed extends React.Component {
             );
           })}
           <button
-              style={{background: '#64CCC5', color: '#04364A',fontFamily:'Georgia'}}
+              className = "Button"
+              style={{background: '#64CCC5', color: '#222831',fontFamily:'Georgia'}}
               onClick={this.refreshButton}>Refresh</button>
         </div>
     );

@@ -76,7 +76,7 @@ class TopBar extends React.Component {
     render() {
         return this.state.app_info ? (
             <AppBar
-                style={{ background: '#04364A'}}
+                style={{ background: '#222831'}}
                 className="topbar-appBar"
                 position="absolute">
                 <Toolbar>
@@ -89,13 +89,14 @@ class TopBar extends React.Component {
                         !this.props.loggedIn() ? <div></div>
                              :
                             <>
-                                <Button style={{background: '#64CCC5', color: '#04364A', fontFamily:'Georgia'}}
+                                <Button style={{color: '#222831', fontFamily:'Georgia'}}
                                         className ="Button"
                                         variant="contained"
                                         onClick={this.logout}>Logout</Button>
                                 <Divider orientation="vertical" flexItem/>
                                 <Button
-                                    style={{background:'#64CCC5', color: '#04364A', fontFamily:'Georgia'}}
+                                    className = "Button"
+                                    style={{color: '#222831', fontFamily:'Georgia'}}
                                     component="label"
                                     variant="contained"
                                 >
@@ -110,7 +111,8 @@ class TopBar extends React.Component {
                                 </Button>
                                 <Divider orientation="vertical" flexItem/>
                                 <Button
-                                    style={{background:'#64CCC5', color: '#04364A', fontFamily:'Georgia'}}
+                                    className = "Button"
+                                    style={{color: '#222831', fontFamily:'Georgia'}}
                                     variant="contained"
                                     component="a"
                                     href={"#/activityFeed/"}>

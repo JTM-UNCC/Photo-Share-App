@@ -127,7 +127,7 @@ class UserDetail extends React.Component {
                                        value={this.state.user.occupation}/>
                         </div>
                         {this.props.currUser._id === this.state.user._id && (<Button
-                            style={{background: '#64CCC5', color: '#04364A'}}
+                            style={{background: '#64CCC5', color: '#222831'}}
                             user_id={this.props.currUser._id}
                             variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
                             style={{ "margin": "20px 0", "backgroundColor": "#bf0300" }}
