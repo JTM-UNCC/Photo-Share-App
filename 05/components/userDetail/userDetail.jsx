@@ -27,7 +27,7 @@ class UserDetail extends React.Component {
     }
 
     componentDidUpdate() {
-        console.info("componentDidUpdate in userDetails");
+
         const new_user_id = this.props.match.params.userId;
         const current_user_id = this.state.user?._id;
         if (current_user_id  !== new_user_id){

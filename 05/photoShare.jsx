@@ -110,7 +110,7 @@ class PhotoShare extends React.Component {
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
                                     />
-                                    <PrivateRoute path="/activityFeed" 
+                                    <PrivateRoute path="/activityFeed" currUser={this.state.user}
                                         changeMainContent={this.changeMainContent}
                                         auth={this.userIsLoggedIn}
                                         RoutedComponent={ActivityFeed}
