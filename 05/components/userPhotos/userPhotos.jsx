@@ -153,6 +153,7 @@ class UserPhotos extends React.Component {
                         this.setState({ photos: this.state.photos.filter( pic => pic._id !== photo_id)});
                     });
                     })
+
                 .catch( error => {
                     console.log(`error in handleSubmit: ${error}`);
                 });
@@ -160,22 +161,16 @@ class UserPhotos extends React.Component {
     }
 
     handleDeletePhoto = (user_id, photo_id) => {
-      console.log("lalala", user_id, photo_id);
-      // change to comment to photo
       axios.delete("/photo/" + user_id + "/" + photo_id)
             .then((response) => {
                 console.log("deleter", response.data);
-                axios.get("/photosOfUser/" + this.state.user_id)
-                    .then((response) =>
-                    {
-                        this.setState({
-                            photos: response.data
-                        });
-                    });
+                let newPhotos = this.state.photos.filter(pic => pic._id !== photo_id);
+                this.setState({ photos: newPhotos });
             })
-            .catch( error => {
-                console.log(`error in handleSubmit: ${error}`);
-            });
+          .catch( error => {
+              console.log(`error in handleSubmit: ${error}`);
+          });
+
     }
 
     addMention = () => {
