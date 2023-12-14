@@ -83,7 +83,8 @@ class PhotoShare extends React.Component {
                         </Grid>
                         <div className="main-topbar-buffer"/>
                         <Grid item sm={3}>
-                            <Paper className="main-grid-item">
+                            <Paper className="main-grid-item"
+                                   style={{maxHeight: '87vh', overflow: 'auto', marginBottom: '1vh'}}>
                                 {
                                     this.userIsLoggedIn() ?
                                         <UserList/> :
@@ -92,7 +93,8 @@ class PhotoShare extends React.Component {
                             </Paper>
                         </Grid>
                         <Grid item sm={9}>
-                            <Paper className="main-grid-item">
+                            <Paper className="main-grid-item"
+                                   style={{maxHeight: '87vh', overflow: 'auto', marginBottom: '1vh'}}>
                                 <Switch>
                                     <Route path="/login-register" render={props => {
                                         return !this.userIsLoggedIn() ?

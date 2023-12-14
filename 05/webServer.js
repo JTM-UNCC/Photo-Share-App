@@ -607,6 +607,35 @@ app.get("/mentions/user/:userId", function(request, response){
     });
 });
 
+app.get("/photosOfUser/:userId/previews", function(request, response){
+    if (hasNoUserSession(request, response)) return;
+
+    const user_id = request.params.userId || "";
+    Photo.find({ "user_id": user_id })
+        .sort("-date")
+        .then(photos => {
+            if (!photos || photos.length === 0){
+                response.status(404).send("No photos");
+            }
+            else {
+                let maxComments = 0;
+                let maxCommentsIndex = 0;
+                for (let i = 0; i < photos.length; i++) {
+                    if (photos[i].comments?.length > maxComments) {
+                        maxComments = photos[i].comments.length;
+                        maxCommentsIndex = i;
+                    }
+                }
+
+                response.status(200)
+                    .send(JSON.stringify({ recent: photos[0], mostComments: photos[maxCommentsIndex] }));
+            }
+
+        })
+
+
+});
+
 app.post("/admin/login", function (request, response) {
 
 
