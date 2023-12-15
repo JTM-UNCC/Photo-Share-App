@@ -195,15 +195,7 @@ class UserDetail extends React.Component {
                                             <ImageListItemBar
                                                 title={`Mentioned in photo: `}
                                                 subtitle={`Posted by ${photo.user.first_name + photo.user.last_name}`}
-                                                actionIcon={
-                                                    <IconButton
-                                                        sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                                        aria-label={`Goto ${photo.user.first_name + photo.user.last_name}`}
-                                                        href={`#/users/${photo.user_id}`}
-                                                    >
-                                                        <InfoIcon/>
-                                                    </IconButton>
-                                                }
+
                                             />
                                         </ImageListItem>
                                     </a>

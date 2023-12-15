@@ -578,7 +578,7 @@ app.get("/mentions/user/:userId", function(request, response){
         .sort("-date_time")
         .then(async photos =>{
             if (!photos || photos.length === 0){
-                response.status(404).send("no mentions found");
+                response.status(400).send("no mentions found");
                 return;
             }
             let queries = [];
@@ -596,7 +596,7 @@ app.get("/mentions/user/:userId", function(request, response){
                 response.status(200).send(JSON.stringify(finalPhotos));
             });
 
-        });
+        }).catch(err => response.status(400).send(err));
 
 });
 
@@ -608,7 +608,7 @@ app.get("/photosOfUser/:userId/previews", function(request, response){
         .sort("-date_time")
         .then(photos => {
             if (!photos || photos.length === 0){
-                response.status(404).send("No photos");
+                response.status(400).send("No photos");
             }
             else {
                 let maxComments = 0;
