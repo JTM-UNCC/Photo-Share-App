@@ -14,30 +14,6 @@ class ActivityFeed extends React.Component {
     super(props);     
     this.state = {activities: undefined};
     this.refreshButton = this.refreshButton.bind(this);
-  }
-  
-  render() {        
-    if(this.props.loggedInUser === undefined || this.state.activities === undefined) return (<></>);
-        
-    return (
-      <div>
-        {this.state.activities.map(activity => {
-          return (
-            <div className="Group4" key={activity._id}>
-              <Typography className="Group4-item">{(new Date(activity.date_time)).toISOString()}</Typography>
-              <Typography className="Group4-item">{activity.activity}</Typography>
-              {
-                activity.photo_file_name === null ?
-                <></> :
-                <img className="Group4-image" src={`../../images/${activity.photo_file_name}`}/>
-              }
-              <Divider/>
-            </div>
-          );
-        })}
-        <button onClick={this.refreshButton}>Refresh</button> 
-      </div>
-    );
   }  
   
   refreshButton() {
@@ -59,5 +35,29 @@ class ActivityFeed extends React.Component {
   
   componentDidUpdate() { }
 }
+
+render() {        
+    if(this.props.loggedInUser === undefined || this.state.activities === undefined) return (<></>);
+        
+    return (
+      <div>
+        {this.state.activities.map(activity => {
+          return (
+            <div className="Group4" key={activity._id}>
+              <Typography className="Group4-item">{(new Date(activity.date_time)).toISOString()}</Typography>
+              <Typography className="Group4-item">{activity.activity}</Typography>
+              {
+                activity.photo_file_name === null ?
+                <></> :
+                <img className="Group4-image" src={`../../images/${activity.photo_file_name}`}/>
+              }
+              <Divider/>
+            </div>
+          );
+        })}
+        <button onClick={this.refreshButton}>Refresh</button> 
+      </div>
+    );
+  }
 
 export default ActivityFeed;
