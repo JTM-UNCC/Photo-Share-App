@@ -34,7 +34,7 @@ class TopBar extends React.Component {
         }).catch(error => {
             console.error(error);
         });
-    }
+    };
 
     handleNewPhoto = (e) => {
         e.preventDefault();
@@ -42,7 +42,7 @@ class TopBar extends React.Component {
             const domForm = new FormData();
             domForm.append('uploadedphoto', this.uploadInput.files[0]);
             axios.post("/photos/new", domForm)
-                .then((response) => {
+                .then(() => {
                     this.setState({
                         photo_upload_show: true,
                         photo_upload_error: false,
@@ -58,7 +58,8 @@ class TopBar extends React.Component {
                     console.log(error);
                 });
         }
-    }
+        console.log(this.state.photo_upload_error, this.state.photo_upload_success, this.state.photo_upload_show);
+    };
     handleAppInfoChange(){
         const app_info = this.state.app_info;
         if (app_info === undefined){
@@ -83,7 +84,7 @@ class TopBar extends React.Component {
                     <Typography variant="h5" component="div" color="inherit">Version: {this.state.app_info.__v}</Typography>
                     {
                         !this.props.loggedIn() ? <div></div>
-                             :
+                             : (
                             <>
                                 <Button variant="contained" onClick={this.logout}>Logout</Button>
                                 <Divider orientation="vertical" flexItem/>
@@ -103,7 +104,8 @@ class TopBar extends React.Component {
                                 <Divider orientation="vertical" flexItem/>
 
                             </>
-                    }
+                          )
+}
                 </Toolbar>
             </AppBar>
 

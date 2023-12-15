@@ -9,13 +9,13 @@ import {
 import './styles/main.css';
 
 // import necessary components
+import {Redirect} from "react-router";
+import axios from "axios";
 import TopBar from './components/topBar/TopBar';
 import UserDetail from './components/userDetail/userDetail';
 import UserList from './components/userList/userList';
 import UserPhotos from './components/userPhotos/userPhotos';
-import LoginRegister from "./components/loginRegister/LoginRegister";
-import {Redirect} from "react-router";
-import axios from "axios";
+import LoginRegister from "./components/LoginRegister/LoginRegister";
 import PrivateRoute from "./components/privateRoute/privateRoute";
 
 
@@ -37,11 +37,11 @@ class PhotoShare extends React.Component {
 
     userIsLoggedIn = () => {
         return this.state.user !== undefined;
-    }
+    };
 
     changeUser = (user) => {
         this.setState({ user: user });
-    }
+    };
 
     checkAuth() {
 
@@ -56,7 +56,7 @@ class PhotoShare extends React.Component {
     }
 
     handleLoad() {
-        if (this.state.user != undefined) {
+        if (!this.state.user) {
             return;
         }
         this.checkAuth();
@@ -97,10 +97,11 @@ class PhotoShare extends React.Component {
                                    style={{maxHeight: '87vh', overflow: 'auto', marginBottom: '1vh'}}>
                                 <Switch>
                                     <Route path="/login-register" render={props => {
-                                        return !this.userIsLoggedIn() ?
+                                        return !this.userIsLoggedIn() ? (
                                             <LoginRegister {...props} changeUser={this.changeUser}
-                                                           changeMainContent={this.changeMainContent}/> :
-                                            <Redirect to="/" from="/login-register"/>
+                                                           changeMainContent={this.changeMainContent}/>
+                                          ) :
+                                            <Redirect to="/" from="/login-register"/>;
                                     }}/>
                                     <PrivateRoute path="/users/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}

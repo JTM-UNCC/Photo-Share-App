@@ -4,18 +4,13 @@ import {
     Box,
     TextField,
     Alert,
-    IconButton,
-    Collapse,
-    Divider,
     Accordion,
     AccordionSummary,
     AccordionDetails,
     Typography
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import './loginRegister.css';
+import './LoginRegister.css';
 import axios from 'axios';
-import {Stack} from "@mui/system";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 /**
@@ -51,7 +46,7 @@ class LoginRegister extends React.Component {
         this.setState({
             showRegistration: !showRegistration
         });
-    }
+    };
     handleLogin = (event) => {
         event.preventDefault(); // firefox has issues with submit buttons so this should fix it
         const currentState = JSON.stringify(this.state.user);
@@ -82,7 +77,7 @@ class LoginRegister extends React.Component {
                 });
                 console.log(error);
             });
-    }
+    };
 
     handleRegister = (event) => {
         event.preventDefault();
@@ -118,10 +113,12 @@ class LoginRegister extends React.Component {
                 });
                 console.log(error);
             });
-    }
+    };
 
     handleChange(event){
-        this.setState((state) => state.user[event.target.id] = event.target.value);
+        this.setState((state) => {
+            state.user[event.target.id] = event.target.value;
+        });
     }
     componentDidMount() {
         //this.handleAppInfoChange();
@@ -134,11 +131,11 @@ class LoginRegister extends React.Component {
                     {this.state.showRegistrationError && <Alert severity="error">Registration Failed</Alert>}
                     {this.state.showRegistrationSuccess && <Alert severity="success">Registration Succeeded</Alert>}
                     <div>
-                        <TextField id="login_name" label="Login Name" variant="outlined"  fullWidth
+                        <TextField id="login_name" label="Login Name" variant="outlined" fullWidth
                                    margin="normal" required={true} onChange={this.handleChange}/>
                     </div>
                     <div>
-                        <TextField id="password" label="Password" variant="outlined"  fullWidth
+                        <TextField id="password" label="Password" variant="outlined" fullWidth
                                    margin="normal" type="password" required={true} onChange={this.handleChange}/>
                     </div>
                     <Box mb={2}>
@@ -157,19 +154,19 @@ class LoginRegister extends React.Component {
                         <AccordionDetails>
                             <Box>
                                 <div>
-                                    <TextField id="password_repeat" label="Repeat Password" variant="outlined"  fullWidth
+                                    <TextField id="password_repeat" label="Repeat Password" variant="outlined" fullWidth
                                                margin="normal" type="password" required={this.state.showRegistration} onChange={this.handleChange}/>
                                 </div>
                                 <div>
-                                    <TextField id="first_name" label="First Name" variant="outlined"  fullWidth
+                                    <TextField id="first_name" label="First Name" variant="outlined" fullWidth
                                                margin="normal" autoComplete="off" required={this.state.showRegistration} onChange={this.handleChange}/>
                                 </div>
                                 <div>
-                                    <TextField id="last_name" label="Last Name" variant="outlined"  fullWidth
+                                    <TextField id="last_name" label="Last Name" variant="outlined" fullWidth
                                                margin="normal" required={this.state.showRegistration} onChange={this.handleChange}/>
                                 </div>
                                 <div>
-                                    <TextField id="location" label="Location" variant="outlined"  fullWidth
+                                    <TextField id="location" label="Location" variant="outlined" fullWidth
                                                margin="normal" onChange={this.handleChange}/>
                                 </div>
                                 <div>

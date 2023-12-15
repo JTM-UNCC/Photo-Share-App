@@ -23,7 +23,6 @@ class UserPhotos extends React.Component {
             add_comment: false,
             user_id: undefined,
             photos: undefined,
-            mentions: [],
             mentionCount: 0
         };
         this.setState = this.setState.bind(this);
@@ -72,9 +71,9 @@ class UserPhotos extends React.Component {
             });
     }
 
-    handleNewCommentChange = (event) => {
+    handleNewCommentChange = () => {
         this.setState({ new_comment: '' });
-    }
+    };
 
     handleShowAddComment = (event) => {
         const photo_id = event.target.attributes.photo_id.value;
@@ -84,7 +83,7 @@ class UserPhotos extends React.Component {
             add_comment: true,
             current_photo_id: photo_id
         });
-    }
+    };
 
     handleCancelAddComment = () => {
         this.setState({
@@ -93,7 +92,7 @@ class UserPhotos extends React.Component {
             current_photo_id: undefined,
             mentionCount: 0
         });
-    }
+    };
     getMentionOptions = () => {
 
         axios.get(`/mentions/users/list`,
@@ -103,13 +102,13 @@ class UserPhotos extends React.Component {
                     console.info("data.length === 0");
                     return;
                 }
-                this.setState({ userList: response.data })
+                this.setState({ userList: response.data });
             }).catch(error => {
             console.error(`error in mention query ${error}`);
             return [];
         });
 
-    }
+    };
 
     handleSubmitAddComment = () => {
         const mentions = this.state.mentionCount;
@@ -123,7 +122,7 @@ class UserPhotos extends React.Component {
                     'Content-Type': 'application/json',
                 }
             })
-            .then((response) => {
+            .then(() => {
                 this.setState({
                     add_comment: false,
                     new_comment: '',
@@ -140,7 +139,7 @@ class UserPhotos extends React.Component {
             .catch(error => {
                 console.log(`error in handleSubmit: ${error}`);
             });
-    }
+    };
 
 
     handleDeleteComment = (photo_id, comment_id) => {
@@ -148,7 +147,7 @@ class UserPhotos extends React.Component {
             .then((response) => {
                 console.log("deleter", response.data);
                 axios.get("/photosOfUser/" + this.state.user_id)
-                    .then((response) =>
+                    .then(() =>
                     {
                         const newState = [];
                         for(let photo of this.state.photos){
@@ -164,7 +163,7 @@ class UserPhotos extends React.Component {
                     console.log(`error in handleSubmit: ${error}`);
                 });
 
-    }
+    };
 
     handleDeletePhoto = (user_id, photo_id) => {
       axios.delete("/photo/" + user_id + "/" + photo_id)
@@ -177,11 +176,12 @@ class UserPhotos extends React.Component {
               console.log(`error in handleSubmit: ${error}`);
           });
 
-    }
+    };
 
     addMention = () => {
-        this.state.mentionCount++;
-    }
+        const newCount = this.state.mentionCount + 1;
+        this.setState({ mentionCount: newCount });
+    };
 
 
 
@@ -216,7 +216,7 @@ class UserPhotos extends React.Component {
                                 {this.props.currUser._id === this.state.user_id && (
                                     <Button
                                         photo_id={item._id} variant="contained" onClick={() => this.handleDeletePhoto(this.state.user_id, item._id)}
-                                            style={{"margin": "20px 0"}}
+                                            style={{margin: "20px 0"}}
                                     >
                                         Delete Photo
                                     </Button>
@@ -243,7 +243,7 @@ class UserPhotos extends React.Component {
                                                    margin="normal" multiline rows={4} value={comment.comment} />
                                         {this.props.currUser._id === comment.user._id && (
                                             <Button comment_id={comment._id} variant="contained" onClick={() => this.handleDeleteComment(item._id, comment._id)}
-                                            style={{"margin": "20px 0"}}
+                                            style={{margin: "20px 0"}}
                                             >
                                                 Delete Comment
                                             </Button>
@@ -270,7 +270,9 @@ class UserPhotos extends React.Component {
                     )}
                 </ImageList>
                 <Dialog id={"commentpane"} scroll={"paper"}
-                        open={this.state.add_comment} ref={ele => container = ele}>
+                        open={this.state.add_comment} ref={ele => {
+                    container = ele;
+                }}>
                     <div>
                         <DialogTitle>Add Comment</DialogTitle>
                         <DialogContent>
@@ -284,7 +286,7 @@ class UserPhotos extends React.Component {
                                            rows={4}
                                            value={this.state.new_comment}
                                            onChange={(ev) => {
-                                               setState({ new_comment: ev.target.value })
+                                               setState({ new_comment: ev.target.value });
                                            }}
                                            a11ySuggestionsListLabel={"Suggested Users"}
                                            allowSuggestionsAboveCursor
@@ -303,11 +305,13 @@ class UserPhotos extends React.Component {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={() => {
-                                this.handleCancelAddComment()
-                            }}>Cancel</Button>
+                                this.handleCancelAddComment();
+                            }}>Cancel
+                            </Button>
                             <Button onClick={() => {
-                                this.handleSubmitAddComment()
-                            }}>Add</Button>
+                                this.handleSubmitAddComment();
+                            }}>Add
+                            </Button>
                         </DialogActions>
                     </div>
                 </Dialog>

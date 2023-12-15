@@ -42,14 +42,14 @@ const express = require("express");
 const app = express();
 
 // Load the Mongoose schema for User, Photo, and SchemaInfo
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const multer = require("multer");
 const User = require("./schema/user.js");
 const Photo = require("./schema/photo.js");
 const SchemaInfo = require("./schema/schemaInfo.js");
 const Activity = require("./schema/activity.js");
 //const Activity = require('./schema/activity.js');
-const session = require("express-session");
-const bodyParser = require("body-parser");
-const multer = require("multer");
 const processFormBody = multer({storage: multer.memoryStorage()}).single('uploadedphoto');
 const commentSchema = require("./schema/comment.js");
 const Comment = mongoose.model("Comment", commentSchema);
@@ -68,7 +68,6 @@ mongoose.connect("mongodb://127.0.0.1/project6", {
 // (http://expressjs.com/en/starter/static-files.html) do all the work for us.
 app.use(express.static(__dirname));
 const crypto = require("./password.js");
-const { get } = require("mongoose");
 
 
 function getSessionUserID(request) {
@@ -180,11 +179,11 @@ app.get('/activities', function (request, response) {
         if(err) {
             console.error("Express/activities | Error in Mongo call: " + err);
             response.status(400).send();
-            return;
+            
         } else {
             console.log('Express/activities | Status 200.');
             response.status(200).send(JSON.stringify(activities));
-            return;
+            
         }
     });
 });
@@ -231,7 +230,7 @@ app.get("/user/:id", function (request, response) {
         return;
     }
     const id = request.params.id;
-    User.findOne({"_id": id}, "_id first_name last_name location description occupation")
+    User.findOne({_id: id}, "_id first_name last_name location description occupation")
         .then(function (user) {
             if (!user) {
                 console.log("User with _id:" + id + " not found.");
@@ -264,9 +263,9 @@ app.post("/photos/new", function (request, response) {
         }
         const timestamp = new Date().valueOf();
         const filename = 'U' + String(timestamp) + request.file.originalname;
-        fs.writeFile("./images/" + filename, request.file.buffer, function (err) {
-            if (err) {
-                console.error("Error in /photos/new", err);
+        fs.writeFile("./images/" + filename, request.file.buffer, function (err2) {
+            if (err2) {
+                console.error("Error in /photos/new", err2);
                 response.status(400).send("error writing photo");
                 return;
             }
@@ -281,9 +280,9 @@ app.post("/photos/new", function (request, response) {
                 .then(() => {
                     response.end();
                 })
-                .catch(err => {
-                    console.error("Error in /photos/new", err);
-                    response.status(500).send(JSON.stringify(err));
+                .catch(err3 => {
+                    console.error("Error in /photos/new", err3);
+                    response.status(500).send(JSON.stringify(err3));
                 });
         });
     });
@@ -307,36 +306,36 @@ app.get("/photosOfUser/:id", function (request, response) {
     }
     Photo.aggregate([
         {
-            "$match":
-                {"user_id": {"$eq": user__id}}
+            $match:
+                {user_id: {$eq: user__id}}
         },
         {
-            "$addFields": {
-                "comments": {"$ifNull": ["$comments", []]}
+            $addFields: {
+                comments: {$ifNull: ["$comments", []]}
             }
         },
         {
-            "$lookup": {
-                "from": "users",
-                "localField": "comments.user_id",
-                "foreignField": "_id",
-                "as": "users"
+            $lookup: {
+                from: "users",
+                localField: "comments.user_id",
+                foreignField: "_id",
+                as: "users"
             }
         },
         {
-            "$addFields": {
-                "comments": {
-                    "$map": {
-                        "input": "$comments",
-                        "in": {
-                            "$mergeObjects": [
+            $addFields: {
+                comments: {
+                    $map: {
+                        input: "$comments",
+                        in: {
+                            $mergeObjects: [
                                 "$$this",
                                 {
-                                    "user": {
-                                        "$arrayElemAt": [
+                                    user: {
+                                        $arrayElemAt: [
                                             "$users",
                                             {
-                                                "$indexOfArray": [
+                                                $indexOfArray: [
                                                     "$users._id",
                                                     "$$this.user_id"
                                                 ]
@@ -351,9 +350,9 @@ app.get("/photosOfUser/:id", function (request, response) {
             }
         },
         {
-            "$project": {
-                "users": 0,
-                "__v": 0,
+            $project: {
+                users: 0,
+                __v: 0,
                 "comments.__v": 0,
                 "comments.user_id": 0,
                 "comments.user.location": 0,
@@ -363,7 +362,7 @@ app.get("/photosOfUser/:id", function (request, response) {
             }
         }
     ]).then(function (photos) {
-        if (photos.length == 0 || !photos) {
+        if (photos.length === 0 || !photos) {
             // Query didn't return an error but didn't find the SchemaInfo object -
             // This is also an internal error return.
             response.status(400).send("length===0");
@@ -371,30 +370,19 @@ app.get("/photosOfUser/:id", function (request, response) {
         }
         //deleting unnecessary values
         photos.map(value => {
-            value.comments.map(comment => {
+            return value.comments.map(comment => {
                 delete comment.user.login_name;
                 delete comment.user.password_digest;
                 delete comment.user.salt;
+                return comment;
             });
         });
         // We got the object - return it in JSON format.
         response.end(JSON.stringify(photos));
     }).catch(error => response.status(400).send(JSON.stringify(error)));
 });
-/**
- * Function to test if a user id provided is a valid hex string. Used to prevent injection attacks
- * @param string the value to test
- * @returns {boolean} true if the value is a valid hex string
- */
-checkIfHex = (string) => {
-    const re = new RegExp(/[0-9A-Fa-f]+/);
-    return re.test(string);
-}
-
-
 
 // here - delete comment functionality
-
 app.delete("/comment/:photo_id/:comment_id", function (request, response) {
 
     if (hasNoUserSession(request, response)) return;
@@ -421,7 +409,7 @@ app.delete("/comment/:photo_id/:comment_id", function (request, response) {
                 response.status(204).send("deleted");
             }
         }
-    )
+    );
 
 });
 
@@ -452,11 +440,11 @@ app.delete("/photo/:user_id/:photo_id", function (request, response) {
                 response.status(204).send("deleted");
             }
         }
-    )
+    );
 
 });
 
-parseMarkup = (commentMarkup) => {
+const parseMarkup = (commentMarkup) => {
     let comment = commentMarkup;
 
     let mentions = [];
@@ -479,7 +467,7 @@ parseMarkup = (commentMarkup) => {
 
     return { comment: comment, mentions: mentions };
 
-}
+};
 
 app.delete("/user/:user_id", function (request, response) {
 
@@ -497,11 +485,11 @@ app.delete("/user/:user_id", function (request, response) {
     });
 
     User.findOneAndDelete(
-        { "_id": user_id }
+        { _id: user_id }
     ).then(() => {
-        Photo.deleteMany({ "user_id": user_id })
+        Photo.deleteMany({ user_id: user_id })
             .then( () => {
-                Comment.deleteMany({ "user_id": user_id })
+                Comment.deleteMany({ user_id: user_id })
                     .then(() => response.status(204).send("deleted successfully"))
                     .catch(err => console.log(err));
             }).catch(err => console.log(err));
@@ -539,13 +527,15 @@ app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
         let temp = [];
         let queries = [];
         for (let mention of mentions){
-            queries.push(User.findOne({ "_id": mention }, "_id")
+            queries.push(User.findOne({ _id: mention }, "_id")
                 .then(user => {
                     if (user) temp.push(user);
                     console.warn("user found: " + user);
                 }).catch(error => console.log(error)));
         }
-        await Promise.allSettled(queries).then(() => mentions = temp);
+        await Promise.allSettled(queries).then(() => {
+            mentions = temp;
+        });
         console.log("mentions:" + mentions);
     }
     console.log("Mentions, right before update:" + mentions);
@@ -554,15 +544,15 @@ app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
         {
             $push: {
                 comments: {
-                    "comment": comment,
-                    "date_time": new Date(),
-                    "user_id": new mongoose.Types.ObjectId(user_id),
-                    "_id": new mongoose.Types.ObjectId(),
-                    "mentioned_users": mentions || []
+                    comment: comment,
+                    date_time: new Date(),
+                    user_id: new mongoose.Types.ObjectId(user_id),
+                    _id: new mongoose.Types.ObjectId(),
+                    mentioned_users: mentions || []
                 }
             }
-        }
-        , function (err) {
+        },
+         function (err) {
             if (err) {
                 // Query returned an error. We pass it back to the browser with an
                 // Internal Service Error (500) error code.
@@ -589,7 +579,7 @@ app.get("/mentions/user/:userId", function(request, response){
             let queries = [];
             let finalPhotos = [];
             photos.map(photo => {
-                queries.push(User.findOne({ "_id": photo.user_id }, "first_name last_name _id")
+                return queries.push(User.findOne({ _id: photo.user_id }, "first_name last_name _id")
                     .then(user => {
                         photo = photo.toObject();
                         photo.user = user;
@@ -609,7 +599,7 @@ app.get("/photosOfUser/:userId/previews", function(request, response){
     if (hasNoUserSession(request, response)) return;
 
     const user_id = request.params.userId || "";
-    Photo.find({ "user_id": user_id })
+    Photo.find({ user_id: user_id })
         .sort("-date_time")
         .then(photos => {
             if (!photos || photos.length === 0){
@@ -629,7 +619,7 @@ app.get("/photosOfUser/:userId/previews", function(request, response){
                     .send(JSON.stringify({ recent: photos[0], mostComments: photos[maxCommentsIndex] }));
             }
 
-        })
+        });
 
 
 });
@@ -638,7 +628,7 @@ app.post("/admin/login", function (request, response) {
 
 
     User.findOne({
-        "login_name": request.body.login_name
+        login_name: request.body.login_name
     }, "_id login_name first_name last_name location occupation description salt password_digest")
         .then(function (user) {
             // console.log(user);
@@ -675,7 +665,7 @@ app.post("/admin/logout", function (request, response) {
 
 app.post("/auth", function (request, response) {
     console.log(`Request received: ${request}`);
-    User.findOne({ "login_name": request.session.login_name },
+    User.findOne({ login_name: request.session.login_name },
         "_id login_name first_name last_name occupation description location")
         .then((user) => {
             if (user != null){
@@ -693,7 +683,7 @@ app.post("/user", function (request, response) {
         response.status(400).send("Missing necessary value");
         return;
     }
-    User.findOne({"login_name": request.body.login_name}, "login_name")
+    User.findOne({login_name: request.body.login_name}, "login_name")
         .then(function (user) {
             if (user) {
                 response.status(400).send(`User ${request.body.login_name} already exists`);
@@ -702,20 +692,20 @@ app.post("/user", function (request, response) {
                 const hash = crypto.makePasswordEntry(request.body.password);
 
                 User.create({
-                    "_id": new mongoose.Types.ObjectId(),
-                    "first_name": request.body.first_name,
-                    "last_name": request.body.last_name,
-                    "password_digest": hash.hash,
-                    "salt": hash.salt,
-                    "login_name": request.body.login_name,
-                    "location": request.body.location || undefined,
-                    "occupation": request.body.occupation || undefined,
-                    "description": request.body.description || undefined
-                }).then(user => {
-                    request.session.login_name = user.login_name;
-                    request.session.user_id = user._id;
-                    session.user_id = user._id;
-                    response.status(200).send(JSON.stringify(user));
+                    _id: new mongoose.Types.ObjectId(),
+                    first_name: request.body.first_name,
+                    last_name: request.body.last_name,
+                    password_digest: hash.hash,
+                    salt: hash.salt,
+                    login_name: request.body.login_name,
+                    location: request.body.location || undefined,
+                    occupation: request.body.occupation || undefined,
+                    description: request.body.description || undefined
+                }).then(user2 => {
+                    request.session.login_name = user2.login_name;
+                    request.session.user_id = user2._id;
+                    session.user_id = user2._id;
+                    response.status(200).send(JSON.stringify(user2));
                 }).catch(error => {
                     response.status(400).send(error);
                 });

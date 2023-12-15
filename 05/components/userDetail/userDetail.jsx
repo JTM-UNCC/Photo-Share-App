@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-    Box, Button, IconButton, ImageList, ImageListItem, ImageListItemBar, TextField
+    Box, Button, ImageList, ImageListItem, ImageListItemBar, TextField
 } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+
 import './userDetail.css';
 import axios from 'axios';
 
@@ -62,15 +62,15 @@ class UserDetail extends React.Component {
                     });
 
                 axios.get(`/mentions/user/${user_id}`)
-                    .then(response => {
-                        let mentions = response.data;
+                    .then(response2 => {
+                        let mentions = response2.data;
                         if (!Array.isArray(mentions)) {
                             mentions = [mentions];
                         }
                         this.setState({ userMentionPhotos: mentions });
                     }).catch(error => {
                     this.setState({ userMentionPhotos: undefined });
-                    console.log("no mentions found ");
+                    console.log("no mentions found " + error);
                 });
 
             })
@@ -92,11 +92,12 @@ class UserDetail extends React.Component {
                 console.log(`error in handleDeleteAccount: ${error}`);
             });
 
-    }
+    };
 
     render() {
 
-        return this.state.user ? (<div>
+        return this.state.user ? (
+<div>
                     <Box component="form" noValidate autoComplete="off"
                     >
                         <div>
@@ -129,13 +130,15 @@ class UserDetail extends React.Component {
                                        margin="normal"
                                        value={this.state.user.occupation}/>
                         </div>
-                        {this.props.currUser._id === this.state.user._id && (<Button
+                        {this.props.currUser._id === this.state.user._id && (
+<Button
                             user_id={this.props.currUser._id}
                             variant="contained" onClick={this.handleDeleteAccount}
-                            style={{ "margin": "20px 0", "backgroundColor": "#bf0300" }}
+                            style={{ margin: "20px 0", backgroundColor: "#bf0300" }}
                         >
                             Delete Account
-                        </Button>)}
+</Button>
+)}
 
                         <ImageList cols={2} variant="masonry" rowHeight={300}>
                             {this.state.recentPhoto && (
@@ -202,13 +205,13 @@ class UserDetail extends React.Component {
                                             />
                                         </ImageListItem>
                                     </a>
-                                </div>)
-                            )
-                            }
+                                </div>
+)
+                            )}
 
                         </ImageList>
                     </Box>
-                </div>
+</div>
             ) :
             (<div/>);
     }
