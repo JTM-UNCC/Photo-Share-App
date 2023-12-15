@@ -26,7 +26,6 @@ User can delete photos and comments that they posted. They are also given the op
 Total Story Points: 13
 
 Marketing Video URL (ensure permissions are set to public viewing):
-
 https://youtu.be/6T55qBMhzDA
 
 Is it OK if we post your Marketing Video URL on the class discussion forum?
