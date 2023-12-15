@@ -50,12 +50,12 @@ class UserDetail extends React.Component {
     }
 
     handleDeleteAccount(user_id) {
-        console.log("lalala");
-        axios.delete("/user/" + user_id)
+        console.log("lalala", this.state.users);
+        axios.delete("/user/:" + user_id)
             .then((response) => {
                 console.log("deleter", response.data);
         // figure out how to log out
-                let newUser = this.state.user.filter(user => user._id !== user_id);
+                let newUser = this.state.users.filter(user => user._id !== user_id);
                 this.setState({ user: newUser });
             })
             .catch( error => {
@@ -113,7 +113,6 @@ class UserDetail extends React.Component {
             <div/>
         );
     }
-
 }
 
 export default UserDetail;

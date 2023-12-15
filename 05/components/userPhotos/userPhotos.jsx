@@ -121,10 +121,11 @@ class UserPhotos extends React.Component {
                 axios.get("/photosOfUser/" + this.state.user_id)
                     .then((response) =>
                     {
-                        this.setState({ photos: this.state.photos.filter( pic => pic._id !== photo_id)});
+                        this.setState({
+                            photos: response.data
+                        });
                     });
-                    })
-
+            })
                 .catch( error => {
                     console.log(`error in handleSubmit: ${error}`);
                 });

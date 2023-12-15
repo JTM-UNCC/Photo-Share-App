@@ -342,7 +342,7 @@ app.get("/photosOfUser/:id", function (request, response) {
             }
         }
     ]).then(function (photos) {
-        if (photos.length == 0 || !photos) {
+        if (photos.length === 0 || !photos) {
             // Query didn't return an error but didn't find the SchemaInfo object -
             // This is also an internal error return.
             response.status(400).send("length===0");
@@ -360,9 +360,6 @@ app.get("/photosOfUser/:id", function (request, response) {
         response.end(JSON.stringify(photos));
     }).catch(error => response.status(400).send(JSON.stringify(error)));
 });
-
-
-// here - delete comment functionality
 
 app.delete("/comment/:photo_id/:comment_id", function (request, response) {
 
@@ -424,7 +421,7 @@ app.delete("/photo/:user_id/:photo_id", function (request, response) {
 
 app.delete("/user/:user_id", function (request, response) {
 
-    if (hasNoUserSession(request)) return;
+    if (hasNoUserSession(request, response)) return;
     const user_id = request.params.user_id || "";
     if (user_id === "") {
         response.status(400).send("ids required");
