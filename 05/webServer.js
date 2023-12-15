@@ -405,6 +405,7 @@ app.delete("/comment/:photo_id/:comment_id", function (request, response) {
         return;
     }
 
+
     Photo.findOneAndUpdate(
         {_id: photo_id},
         {$pull: {comments: {_id: comment_id}}},
@@ -432,6 +433,9 @@ app.delete("/photo/:user_id/:photo_id", function (request, response) {
     if (photo_id === "" || user_id === "") {
         response.status(400).send("ids required");
         return;
+    }
+    if (user_id !== getSessionUserID(request)){
+        response.status(401).send("unauthorized delete");
     }
 
     Photo.findOneAndDelete(
@@ -485,24 +489,25 @@ app.delete("/user/:user_id", function (request, response) {
         response.status(400).send("ids required");
         return;
     }
+    if (user_id !== getSessionUserID(request)){
+        response.status(401).send("Invalid user id");
+    }
+    request.session.destroy(() => {
+        session.user_id = undefined;
+    });
 
     User.findOneAndDelete(
-        {_id: user_id},
-        undefined,
-        (err, user)=>{
-            if (err){
-                response.status(400).send(JSON.stringify(err));
-            }
-            else if (!user){
-                response.status(400).send("photo doesn't exist");
-            }
-            else {
-                response.status(204).send("deleted");
-            }
-        }
-    )
+        { "_id": user_id }
+    ).then(() => {
+        Photo.deleteMany({ "user_id": user_id })
+            .then( () => {
+                Comment.deleteMany({ "user_id": user_id })
+                    .then(() => response.status(204).send("deleted successfully"))
+                    .catch(err => console.log(err));
+            }).catch(err => console.log(err));
+    }).catch(err => console.log(err));
 
-})
+});
 
 
 app.post("/commentsOfPhoto/:photo_id", async function (request, response) {

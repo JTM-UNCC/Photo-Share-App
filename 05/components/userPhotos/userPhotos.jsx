@@ -150,10 +150,16 @@ class UserPhotos extends React.Component {
                 axios.get("/photosOfUser/" + this.state.user_id)
                     .then((response) =>
                     {
-                        this.setState({ photos: this.state.photos.filter( pic => pic._id !== photo_id)});
+                        const newState = [];
+                        for(let photo of this.state.photos){
+                            if (photo._id === photo_id){
+                                photo.comments = photo.comments.filter(cmt => cmt._id !== comment_id);
+                            }
+                            newState.push(photo);
+                        }
+                        this.setState({ photos: newState });
                     });
                     })
-
                 .catch( error => {
                     console.log(`error in handleSubmit: ${error}`);
                 });

@@ -14,10 +14,10 @@ import UserDetail from './components/userDetail/userDetail';
 import UserList from './components/userList/userList';
 import UserPhotos from './components/userPhotos/userPhotos';
 import LoginRegister from "./components/loginRegister/LoginRegister";
-import {Redirect, withRouter} from "react-router";
+import {Redirect} from "react-router";
 import axios from "axios";
 import PrivateRoute from "./components/privateRoute/privateRoute";
-import ActivityFeed from './components/activityFeed/ActivityFeed';
+
 
 class PhotoShare extends React.Component {
     constructor(props) {
@@ -106,16 +106,12 @@ class PhotoShare extends React.Component {
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserDetail}
+                                                  changeUser={this.changeUser}
                                     />
                                     <PrivateRoute path="/photos/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
-                                    />
-                                    <PrivateRoute path="/activityFeed" currUser={this.state.user}
-                                        changeMainContent={this.changeMainContent}
-                                        auth={this.userIsLoggedIn}
-                                        RoutedComponent={ActivityFeed}
                                     />
                                     <PrivateRoute path="/" auth={this.userIsLoggedIn}/>
                                 </Switch>
