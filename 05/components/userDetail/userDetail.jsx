@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-    Box, Button, ImageList, ImageListItem, ImageListItemBar, TextField
+    Box, Button, IconButton, ImageList, ImageListItem, ImageListItemBar, TextField
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import './userDetail.css';
 import axios from 'axios';
 
@@ -62,12 +63,12 @@ class UserDetail extends React.Component {
 
                 axios.get(`/mentions/user/${user_id}`)
                     .then(response => {
-                            let mentions = response.data;
-                            if (!Array.isArray(mentions)){
-                                mentions = [mentions];
-                            }
-                            this.setState({ userMentionPhotos: mentions });
-                        }).catch(error => console.log("no mentions"));
+                        let mentions = response.data;
+                        if (!Array.isArray(mentions)) {
+                            mentions = [mentions];
+                        }
+                        this.setState({ userMentionPhotos: mentions });
+                    }).catch(error => this.setState({ userMentionPhotos: undefined }));
 
             })
             .catch((error) => {
@@ -93,116 +94,125 @@ class UserDetail extends React.Component {
     render() {
 
         return this.state.user ? (<div>
-            <Box component="form" noValidate autoComplete="off"
-                  >
-                <div>
-                    <Button variant="contained" component="a" href={"#/photos/" + this.state.user._id}>
-                        User Photos
-                    </Button>
-                </div>
-                <div>
-                    <TextField id="first_name" label="First Name" variant="outlined" disabled fullWidth
-                               margin="normal"
-                               value={this.state.user.first_name}/>
-                </div>
-                <div>
-                    <TextField id="last_name" label="Last Name" variant="outlined" disabled fullWidth
-                               margin="normal"
-                               value={this.state.user.last_name}/>
-                </div>
-                <div>
-                    <TextField id="location" label="Location" variant="outlined" disabled fullWidth
-                               margin="normal"
-                               value={this.state.user.location}/>
-                </div>
-                <div>
-                    <TextField id="description" label="Description" variant="outlined" multiline rows={4}
-                               disabled
-                               fullWidth margin="normal" value={this.state.user.description}/>
-                </div>
-                <div>
-                    <TextField id="occupation" label="Occupation" variant="outlined" disabled fullWidth
-                               margin="normal"
-                               value={this.state.user.occupation}/>
-                </div>
-                {this.props.currUser._id === this.state.user._id && (<Button
-                        user_id={this.props.currUser._id}
-                        variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
-                        style={{ "margin": "20px 0", "backgroundColor": "#bf0300" }}
+                    <Box component="form" noValidate autoComplete="off"
                     >
-                        Delete Account
-                    </Button>)}
+                        <div>
+                            <Button variant="contained" component="a" href={"#/photos/" + this.state.user._id}>
+                                User Photos
+                            </Button>
+                        </div>
+                        <div>
+                            <TextField id="first_name" label="First Name" variant="outlined" disabled fullWidth
+                                       margin="normal"
+                                       value={this.state.user.first_name}/>
+                        </div>
+                        <div>
+                            <TextField id="last_name" label="Last Name" variant="outlined" disabled fullWidth
+                                       margin="normal"
+                                       value={this.state.user.last_name}/>
+                        </div>
+                        <div>
+                            <TextField id="location" label="Location" variant="outlined" disabled fullWidth
+                                       margin="normal"
+                                       value={this.state.user.location}/>
+                        </div>
+                        <div>
+                            <TextField id="description" label="Description" variant="outlined" multiline rows={4}
+                                       disabled
+                                       fullWidth margin="normal" value={this.state.user.description}/>
+                        </div>
+                        <div>
+                            <TextField id="occupation" label="Occupation" variant="outlined" disabled fullWidth
+                                       margin="normal"
+                                       value={this.state.user.occupation}/>
+                        </div>
+                        {this.props.currUser._id === this.state.user._id && (<Button
+                            user_id={this.props.currUser._id}
+                            variant="contained" onClick={() => this.handleDeleteAccount(this.state.user_id)}
+                            style={{ "margin": "20px 0", "backgroundColor": "#bf0300" }}
+                        >
+                            Delete Account
+                        </Button>)}
 
-                    <ImageList cols={2} variant="masonry" rowHeight={300}>
-                        {this.state.recentPhoto && (
-                            <a href={`#/photos/${this.state.user._id}`}>
-                            <ImageListItem>
-                                <img
-                                    src={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                    srcSet={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                    sizes={"(max-width: 8vh)"}
-                                    alt={this.state.recentPhoto.file_name}
-                                    width="8vh"
-                                    loading="lazy"
-                                />
-                                <ImageListItemBar
-                                    title={`Recent photo from ${this.state.user.first_name}`}
-                                    subtitle={<span>upload date: {this.state.recentPhoto.date_time}</span>}
+                        <ImageList cols={2} variant="masonry" rowHeight={300}>
+                            {this.state.recentPhoto && (
+                                <a href={`#/photos/${this.state.user._id}`}>
+                                    <ImageListItem>
 
-                                />
-                            </ImageListItem>
-                            </a>
-                        )}
+                                        <img
+                                            src={`images/${this.state.recentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
+                                            srcSet={`images/${this.state.recentPhoto.file_name}??w=248&fit=crop&auto=format&dpr=2 2x`}
+                                            alt={this.state.recentPhoto.file_name}
+                                            width="8vh"
+                                            loading="lazy"
+                                        />
+
+                                        <ImageListItemBar
+                                            title={`Recent photo from ${this.state.user.first_name}`}
+                                            subtitle={<span>upload date: {this.state.recentPhoto.date_time}</span>}
+
+                                        />
+                                    </ImageListItem>
+                                </a>
+                            )}
 
 
-                        {this.state.maxCommentPhoto && this.state.maxCommentPhoto.comments.length > 0 && (
-                            <a href={`#/photos/${this.state.user._id}`}>
-                            <ImageListItem>
-                                <img
-                                    src={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                    srcSet={`images/${this.state.maxCommentPhoto.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                    sizes={"(max-width: 8vh) and (min-width: 8vh)"}
-                                    alt={this.state.maxCommentPhoto.file_name}
-                                    width="8vh"
-                                    loading="lazy"
-                                />
+                            {this.state.maxCommentPhoto && this.state.maxCommentPhoto.comments.length > 0 && (
+                                <a href={`#/photos/${this.state.user._id}`}>
+                                    <ImageListItem>
 
-                                <ImageListItemBar
-                                    title={`Most commented photo from ${this.state.user.first_name}`}
-                                    subtitle={<span>{this.state.maxCommentPhoto.comments.length} comments</span>}
+                                        <img
+                                            src={`images/${this.state.maxCommentPhoto.file_name}?w=248&fit=crop&auto=format`}
+                                            srcSet={`images/${this.state.maxCommentPhoto.file_name}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                                            alt={this.state.maxCommentPhoto.file_name}
+                                            width="8vh"
+                                            loading="lazy"
+                                        />
 
-                                />
-                            </ImageListItem>
-                            </a>
-                        )}
-                        {this.state.userMentionPhotos && this.state.userMentionPhotos.map(photo => (
-                            <div key={photo._id}>
+                                        <ImageListItemBar
+                                            title={`Most commented photo from ${this.state.user.first_name}`}
+                                            subtitle={<span>{this.state.maxCommentPhoto.comments.length} comments</span>}
 
-                                <ImageListItem>
+                                        />
+                                    </ImageListItem>
+                                </a>
+                            )}
+                            {this.state.userMentionPhotos && this.state.userMentionPhotos.map(photo => (
+                                <div key={photo._id}>
                                     <a href={`#/photos/${photo.user_id}`}>
-                                    <img
-                                        src={`images/${photo.file_name}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                        srcSet={`images/${photo.file_name}?w=164&h=164&fit=crop&auto=format`}
-                                        sizes={"(max-width: 8vh) and (min-width: 8vh)"}
-                                        alt={photo.file_name}
-                                        loading="lazy"
-                                        width="8vh"
-                                    />
+                                        <ImageListItem>
+
+                                            <img
+                                                src={`images/${photo.file_name}?w=248&fit=crop&auto=format`}
+                                                srcSet={`images/${photo.file_name}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                                                alt={photo.file_name}
+                                                loading="lazy"
+                                                width="8vh"
+
+                                            />
+
+
+                                            <ImageListItemBar
+                                                title={`Mentioned in photo: `}
+                                                subtitle={`Posted by ${photo.user.first_name + photo.user.last_name}`}
+                                                actionIcon={
+                                                    <IconButton
+                                                        sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                                                        aria-label={`Goto ${photo.user.first_name + photo.user.last_name}`}
+                                                        href={`#/users/${photo.user_id}`}
+                                                    >
+                                                        <InfoIcon/>
+                                                    </IconButton>
+                                                }
+                                            />
+                                        </ImageListItem>
                                     </a>
+                                </div>)
+                            )
+                            }
 
-                                    <ImageListItemBar
-                                        title={`Mentioned in photo: `}
-                                        subtitle={<a href={`#/users/${photo.user_id}`}>{`Posted by ${photo.user.first_name + photo.user.last_name}`}</a>}
-
-                                    />
-                                </ImageListItem>
-                            </div>)
-
-                        )
-                        }
-
-                    </ImageList>
-            </Box>
+                        </ImageList>
+                    </Box>
                 </div>
             ) :
             (<div/>);
