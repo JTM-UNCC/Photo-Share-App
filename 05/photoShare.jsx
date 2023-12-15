@@ -17,6 +17,7 @@ import LoginRegister from "./components/loginRegister/LoginRegister";
 import {Redirect, withRouter} from "react-router";
 import axios from "axios";
 import PrivateRoute from "./components/privateRoute/privateRoute";
+import ActivityFeed from './components/activityFeed/ActivityFeed';
 
 class PhotoShare extends React.Component {
     constructor(props) {
@@ -68,6 +69,8 @@ class PhotoShare extends React.Component {
 
     render() {
 
+
+
         return (
 
 
@@ -102,37 +105,16 @@ class PhotoShare extends React.Component {
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserDetail}
                                     />
-
-                                    {/*I made these two because I can't access currUser - Veena*/}
-                                    <UserPhotos path="/users/:userId" currUser={this.state.user}
-                                                  changeMainContent={this.changeMainContent}
-                                                  auth={this.userIsLoggedIn}
-                                                  RoutedComponent={UserDetail}
-                                    />
-                                    <UserDetail path="/users/:userId" currUser={this.state.user}
-                                                changeMainContent={this.changeMainContent}
-                                                auth={this.userIsLoggedIn}
-                                                RoutedComponent={UserDetail}
-                                    />
-
-
                                     <PrivateRoute path="/photos/:userId" currUser={this.state.user}
                                                   changeMainContent={this.changeMainContent}
                                                   auth={this.userIsLoggedIn}
                                                   RoutedComponent={UserPhotos}
                                     />
-                                    {/*And these two - Veena*/}
-                                    <UserPhotos path="/photos/:userId" currUser={this.state.user}
-                                                  changeMainContent={this.changeMainContent}
-                                                  auth={this.userIsLoggedIn}
-                                                  RoutedComponent={UserPhotos}
+                                    <PrivateRoute path="/activityFeed" currUser={this.state.user}
+                                        changeMainContent={this.changeMainContent}
+                                        auth={this.userIsLoggedIn}
+                                        RoutedComponent={ActivityFeed}
                                     />
-                                    <UserDetail path="/photos/:userId" currUser={this.state.user}
-                                                changeMainContent={this.changeMainContent}
-                                                auth={this.userIsLoggedIn}
-                                                RoutedComponent={UserPhotos}
-                                    />
-
                                     <PrivateRoute path="/" auth={this.userIsLoggedIn}/>
                                 </Switch>
                             </Paper>

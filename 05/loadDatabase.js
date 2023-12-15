@@ -101,6 +101,7 @@ Promise.all(removePromises)
                     comment: comment.comment,
                     date_time: comment.date_time,
                     user_id: comment.user.objectID,
+                      mentions_id: []
                   },
                 ]);
                 console.log(

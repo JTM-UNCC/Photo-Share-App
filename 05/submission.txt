@@ -5,16 +5,36 @@ Please fill in this form and submit it with your Project 8.
 Enter no more than 5 user stories that you did for the assignment that you would
 like to be graded on. For each story include the following information:
 
-Story number and name:
-Story points:
+Story number and name: 1) Extend user profile detail with usage
+Story points: 3
 Brief description to see the story in action:
 
-Total Story Points:
+Story number and name: 2) @mentions in comments
+Story points: 6
+Brief description to see the story in action:
+While adding a new comment, users are able to @mention any other existing users from a given list. After comment is posted, user can navigate to another user's page. Under user detail, page displays thumbnail of photo and owner's name which they are tagged in. Clicking on the thumbnail photo will bring user to the image post with the comment.
+
+Story number and name: 3) Visibility control on photos
+Story points: 4
+Brief description to see the story in action:
+When user is uploading a new image, user is given the option to choose which other users can view image and comments. After posting it, only selected users can view the image post and comments. If no users are specifically selected, image post and comments are visible to all users.
+
+Story number and name: 4) Activity Feed
+Story points: 4
+Brief description to see the story in action:
+User can locate "Activities" button in the toolbar. A view is then shown of website's 5 most recent activities.
+
+Story number and name: 5) Deleting Comments, Photos, and Users
+Story points: 4
+Brief description to see the story in action:
+User can delete photos and comments that they posted. They are also given the option to delete their own user profile.
+
+Total Story Points: 21
 
 Marketing Video URL (ensure permissions are set to public viewing):
 
 Is it OK if we post your Marketing Video URL on the class discussion forum?
-[Yes/No]
+Yes
 
 Any special instructions for grading (it should be easy for someone to run your
 app from a new machine):
