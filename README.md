@@ -9,7 +9,6 @@ This app allows users to connect with other users through photo posting and comm
   - [Login/Register Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#loginregister-page---login-register)
   - [User Detail Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#user-detail-page---usersuserid)
   - [User Photo Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#user-photo-page---photosuserid)
-  - [Activity Feed Page](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#activity-feed-page---activityfeed)
   - [Other Features](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#other-features)
 - [Scrum Team](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#scrum-team)
   - [Product Owner](https://github.com/JTM-UNCC/Group_4_p5-8?tab=readme-ov-file#product-owner)
@@ -30,6 +29,7 @@ To install the necessary packages and load the data, run these commands in termi
 ```
 npm install
 node loadDatabase.js
+npm run build
 ```
 
 ## Pages & Features
@@ -74,17 +74,7 @@ node loadDatabase.js
   - If you added a comment, there will be a "Delete Comment" button. It will delete your comment.
 - @mention in comments
   - When you create a comment, you can @ existing users. After posting the comment, the thumbnail of photo will appear in that user's detail.
-### Activity Feed Page - ```/activityFeed```
-- View app's 5 most recent activity
-  - Locate the "Activity Feed" button on the top bar. After clicking it, you will be rerouted to a new page. It will show you the 5 most recent activities with:
-    - Time of activity
-    - User that performed activity
-    - Activity type
-    - User registering
-    - User logging in 
-    - User logging out
-- Refresh feed
-  - Click on the button "Refresh feed" to get the latest updates. 
+
 ### Other Features
 - Logout
   - Navigate to the top bar to see the "Logout" button. It will log you out.
