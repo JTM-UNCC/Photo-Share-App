@@ -504,7 +504,9 @@ app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
 
     let { comment, mentions } = (mentionNum > 0) ?
         parseMarkup(request.body.comment)
-        : request.body.comment || "";
+        : { comment: request.body.comment || "", mentions: undefined};
+
+    console.log(comment + "COMMENTT");
 
     const id = request.params.photo_id || "";
     const user_id = getSessionUserID(request) || "";
@@ -548,7 +550,7 @@ app.post("/commentsOfPhoto/:photo_id", async function (request, response) {
                     date_time: new Date(),
                     user_id: new mongoose.Types.ObjectId(user_id),
                     _id: new mongoose.Types.ObjectId(),
-                    mentioned_users: mentions || []
+                    mentioned_users: mentions || undefined
                 }
             }
         },
